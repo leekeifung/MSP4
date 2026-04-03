@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>默寫練習｜第四課 虛擬實境的應用</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;color:#fff;font-size:1.55em;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.subtitle{text-align:center;color:rgba(255,255,255,.88);margin-bottom:18px;font-size:1.05em}
+/* tabs */
+.tab-bar{display:flex;gap:0}
+.tab{flex:1;padding:13px 8px;cursor:pointer;border:none;border-radius:14px 14px 0 0;font-size:1em;font-weight:700;font-family:inherit;transition:.25s;background:rgba(255,255,255,.25);color:rgba(255,255,255,.8)}
+.tab.active{background:#fff;color:#2c3e50;box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+.panel{display:none}
+.panel.active{display:block}
+.section{background:#fff;border-radius:0 0 16px 16px;padding:22px;box-shadow:0 6px 24px rgba(0,0,0,.13)}
+.desc{color:#555;font-size:.92em;margin-bottom:14px;line-height:1.7}
+.note{color:#999;font-size:.82em;margin:6px 0 10px}
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.speed-label{color:#555;font-size:.9em;white-space:nowrap}
+.spd,.spd2{padding:5px 11px;border:2px solid #667eea;background:#fff;color:#667eea;border-radius:6px;cursor:pointer;font-size:.85em;font-family:inherit;transition:.2s}
+.spd:hover,.spd2:hover{background:#eef1ff}
+.spd.active,.spd2.active{background:#667eea;color:#fff}
+.btn{padding:9px 18px;border:none;border-radius:8px;cursor:pointer;font-size:.95em;font-family:inherit;color:#fff;transition:.15s;white-space:nowrap}
+.btn:active{transform:scale(.96)}
+.btn-play{background:#27ae60}.btn-stop{background:#e74c3c}.btn-check{background:#f39c12}.btn-show{background:#3498db}.btn-reset{background:#95a5a6}
+.btn-speak{background:#27ae60;color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.05em;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+.btn-speak:active{transform:scale(.88)}
+.btn-para{background:#8e44ad;color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:.85em;font-family:inherit;transition:.15s}
+.btn-para:active{transform:scale(.95)}
+/* paragraph / sentence */
+.para-header{display:flex;align-items:center;gap:10px;margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid #f0e6f6}
+.para-header:first-child{margin-top:8px}
+.para-label{color:#8e44ad;font-weight:700;font-size:.97em}
+.sent-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
+.sent-num{color:#aaa;min-width:28px;text-align:right;padding-top:9px;font-size:.85em}
+.sent-body{flex:1}
+.sent-input{width:100%;padding:9px 11px;border:2px solid #ddd;border-radius:8px;font-size:1em;font-family:inherit;resize:vertical;min-height:44px;transition:border-color .2s,background .2s;line-height:1.6}
+.sent-input:focus{border-color:#667eea;outline:none;box-shadow:0 0 0 3px rgba(102,126,234,.15)}
+.sent-input.correct{border-color:#27ae60;background:#f0fff4}
+.sent-input.wrong{border-color:#e74c3c;background:#fff5f5}
+.sent-answer{display:none;color:#27ae60;font-size:.88em;padding:5px 2px;border-top:1px dashed #ccc;margin-top:5px;line-height:1.6}
+.sent-answer.show{display:block}
+.result{margin-top:14px;padding:11px 14px;border-radius:8px;background:#fef9e7;color:#7d6608;font-size:.95em}
+/* vocab */
+.vocab-grid{display:flex;flex-direction:column;gap:8px}
+.vocab-row{display:flex;gap:10px;align-items:center;padding:10px 14px;background:#f8f9fc;border-radius:10px;transition:background .2s}
+.vocab-num{color:#aaa;min-width:28px;text-align:right;font-size:.9em}
+.vocab-input{width:150px;padding:9px 10px;border:2px solid #ddd;border-radius:8px;font-size:1.1em;font-family:inherit;text-align:center;transition:border-color .2s,background .2s}
+.vocab-input:focus{border-color:#667eea;outline:none;box-shadow:0 0 0 3px rgba(102,126,234,.15)}
+.vocab-input.correct{border-color:#27ae60;background:#f0fff4}
+.vocab-input.wrong{border-color:#e74c3c;background:#fff5f5}
+.vocab-answer{display:none;color:#27ae60;font-weight:700;font-size:1.08em;margin-left:4px}
+.vocab-answer.show{display:inline}
+/* teacher */
+.teacher-preview{margin-top:18px}
+.teacher-preview summary{cursor:pointer;color:#8e44ad;font-weight:700;font-size:.95em;padding:6px 0}
+.preview-text{margin-top:10px;padding:16px;background:#fef9e7;border-radius:10px;line-height:2;white-space:pre-wrap;font-size:.93em;color:#333}
+/* highlight current playing */
+.playing-row{background:#fffde7;border-radius:8px}
+@media(max-width:640px){
+  body{padding:10px}
+  h1{font-size:1.25em}
+  .tab{font-size:.82em;padding:10px 4px}
+  .section{padding:14px}
+  .sent-row{flex-wrap:wrap;gap:4px}
+  .sent-num{min-width:auto;text-align:left;padding-top:0}
+  .vocab-row{flex-wrap:wrap}
+  .vocab-input{width:100%}
+  .controls{gap:6px}
+  .btn{padding:8px 12px;font-size:.87em}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>📝 默寫練習｜第四課</h1>
+<p class="subtitle">虛擬實境的應用</p>
+
+<div class="tab-bar">
+  <button class="tab active" id="tabBtn1" onclick="switchTab(1)">📖 文章默書</button>
+  <button class="tab" id="tabBtn2" onclick="switchTab(2)">✏️ 字詞聽寫</button>
+</div>
+
+<!-- ========== PART 1 ========== -->
+<div id="panel1" class="panel active">
+<div class="section">
+  <p class="desc">老師朗讀：逐句播放（先半句，停頓，再後半句），學生聽後默寫。<br>平時不顯示文字，僅在「顯示答案」時才露出。</p>
+
+  <div class="controls">
+    <span class="speed-label">語速：</span>
+    <button class="spd" data-r="0.8" onclick="setSpd(this)">0.80×</button>
+    <button class="spd" data-r="0.9" onclick="setSpd(this)">0.90×</button>
+    <button class="spd active" data-r="1" onclick="setSpd(this)">1.00×</button>
+    <button class="spd" data-r="1.1" onclick="setSpd(this)">1.10×</button>
+  </div>
+  <div class="controls">
+    <button class="btn btn-play" onclick="playAll()">▶ 播放全文（逐句）</button>
+    <button class="btn btn-stop" onclick="stopSp()">⏹ 停止語音</button>
+  </div>
+  <p class="note">若未出聲，請先點擊頁面；iOS 需互動後才可播放。</p>
+
+  <div id="artBox"></div>
+
+  <div class="controls" style="margin-top:16px">
+    <button class="btn btn-check" onclick="checkArt()">✅ 批改</button>
+    <button class="btn btn-show" onclick="showArt()">👀 顯示全部答案</button>
+    <button class="btn btn-reset" onclick="resetArt()">♻️ 重設</button>
+  </div>
+  <div class="result" id="artRes">尚未批改。</div>
+
+  <details class="teacher-preview">
+    <summary>教師預覽全文（不建議課堂顯示給學生）</summary>
+    <div class="preview-text" id="prevBox"></div>
+  </details>
+</div>
+</div>
+
+<!-- ========== PART 2 ========== -->
+<div id="panel2" class="panel">
+<div class="section">
+  <p class="desc">字詞聽寫：點擊 🔊 聆聽廣東話朗讀，然後在空格內寫出正確字詞。<br>次序每次載入隨機排列。</p>
+
+  <div class="controls">
+    <span class="speed-label">語速：</span>
+    <button class="spd2" data-r="0.8" onclick="setSpd2(this)">0.80×</button>
+    <button class="spd2" data-r="0.9" onclick="setSpd2(this)">0.90×</button>
+    <button class="spd2 active" data-r="1" onclick="setSpd2(this)">1.00×</button>
+    <button class="spd2" data-r="1.1" onclick="setSpd2(this)">1.10×</button>
+  </div>
+
+  <div class="vocab-grid" id="vocBox"></div>
+
+  <div class="controls" style="margin-top:16px">
+    <button class="btn btn-check" onclick="checkVoc()">✅ 批改</button>
+    <button class="btn btn-show" onclick="showVoc()">👀 顯示全部答案</button>
+    <button class="btn btn-reset" onclick="resetVoc()">♻️ 重設（重新隨機排列）</button>
+  </div>
+  <div class="result" id="vocRes">尚未批改。</div>
+</div>
+</div>
+
+</div>
+
+<script>
+/* ===== DATA ===== */
+const PARAS = [
+  {label:"第一段",sents:[
+    "虛擬實境（virtual reality，縮寫為VR）是甚麼？",
+    "簡單來說，就是在電腦建構一個三維立體空間的虛構情境，只要人們戴上特定裝置，進入這個虛構情境後，就如同身處真實世界。",
+    "近年，虛擬實境的技術越來越成熟，不少範疇如娛樂、教育、醫學等都應用這項技術，以提升產品或服務的質量。"
+  ]},
+  {label:"第二段",sents:[
+    "娛樂方面，虛擬實境能大大提升遊戲趣味。",
+    "電子遊戲生產商推出各款虛擬實境遊戲，比傳統的電子遊戲更具吸引力，受用家歡迎。",
+    "人們戴上一個既像頭盔又像眼鏡的虛擬實境裝置後，視覺會被它帶引着，除了仿如置身海底、森林或是太空，還會在視覺及聽覺方面得到強烈的刺激。"
+  ]},
+  {label:"第三段",sents:[
+    "教育方面，老師可以運用虛擬實境技術輔助教學。",
+    "在香港，地理課每週只有兩節課，不可能常常做實地考察。",
+    "有的學校開設了虛擬實境地理教室，身處校園的學生戴上學習眼鏡後，立即進入佔地六十一公頃的虛擬香港濕地公園，參觀一萬平方呎的室內展館，觀察地貌，「親身」感受，使學習過程更有趣、更有效。"
+  ]},
+  {label:"第四段",sents:[
+    "醫學方面，虛擬實境技術主要應用在培護人員和醫治病人上。",
+    "通過虛擬實境，護士能從多角度觀察人體器官，了解人體運作。",
+    "實習醫生看着虛擬實境眼鏡裏投射出來的病人，練習做手術。",
+    "另外，有些醫生讓畏高症病患者置身於虛擬的高樓大廈上，從「上」往「下」望，幫助患者在安全的環境下克服畏高症。"
+  ]},
+  {label:"第五段",sents:[
+    "總括而言，虛擬實境能廣泛地應用在不同領域。",
+    "我們應該多了解日新月異的科技發展，繼而把科技的用途進一步發揮，貢獻社會，這將是世界公民之福。"
+  ]}
+];
+
+const VOCAB = [
+  "虛擬","建構","虛構","範疇","技術","質量",
+  "娛樂","仿如","刺激","輔助","考察","有效",
+  "培訓","解","廣泛","領域","日新月異","發揮"
+];
+
+/* ===== GLOBALS ===== */
+let rate1=1, rate2=1, playing=false;
+let allS=[];        // flat sentence list
+let shufV=[];       // shuffled vocab
+
+/* ===== SPEECH ===== */
+function gv(){
+  const v=speechSynthesis.getVoices();
+  return v.find(x=>x.lang==='zh-HK')
+      || v.find(x=>x.lang.startsWith('zh-HK'))
+      || v.find(x=>x.lang.startsWith('zh'))
+      || null;
+}
+speechSynthesis.onvoiceschanged=gv;
+
+function say(txt,r,cb){
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='zh-HK'; u.rate=r;
+  const v=gv(); if(v) u.voice=v;
+  if(cb) u.onend=cb;
+  u.onerror=()=>{if(cb)cb();};
+  speechSynthesis.speak(u);
+}
+
+/* split at comma nearest to middle */
+function halves(s){
+  if(s.length<=14) return [s];
+  const cc=[];
+  for(let i=0;i<s.length;i++) if('，、；'.includes(s[i])) cc.push(i);
+  if(!cc.length) return [s];
+  const m=s.length/2; let b=cc[0];
+  for(const c of cc) if(Math.abs(c-m)<Math.abs(b-m)) b=c;
+  return [s.substring(0,b+1), s.substring(b+1)];
+}
+
+function saySent(s,r,cb){
+  const p=halves(s);
+  if(p.length===1){ say(p[0],r,cb); }
+  else{ say(p[0],r,()=>{ setTimeout(()=>say(p[1],r,cb),1100); }); }
+}
+
+function stopSp(){ playing=false; speechSynthesis.cancel(); clearHL(); }
+
+/* ===== TAB ===== */
+function switchTab(n){
+  document.getElementById('tabBtn1').classList.toggle('active',n===1);
+  document.getElementById('tabBtn2').classList.toggle('active',n===2);
+  document.getElementById('panel1').classList.toggle('active',n===1);
+  document.getElementById('panel2').classList.toggle('active',n===2);
+}
+
+/* ===== SPEED ===== */
+function setSpd(el){
+  document.querySelectorAll('.spd').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); rate1=parseFloat(el.dataset.r);
+}
+function setSpd2(el){
+  document.querySelectorAll('.spd2').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); rate2=parseFloat(el.dataset.r);
+}
+
+/* ===== HIGHLIGHT ===== */
+function hlRow(idx){
+  clearHL();
+  const r=document.getElementById('sr'+idx);
+  if(r) r.classList.add('playing-row');
+}
+function clearHL(){
+  document.querySelectorAll('.playing-row').forEach(e=>e.classList.remove('playing-row'));
+}
+
+/* ===== PART 1 BUILD ===== */
+function buildArt(){
+  const box=document.getElementById('artBox');
+  let h='', idx=0;
+  let prev='第四課\n虛擬實境的應用\n\n';
+  PARAS.forEach((p,pi)=>{
+    h+=`<div class="para```html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中文默寫練習｜第四課 虛擬實境的應用</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;background:#eef2f7;color:#1e293b;line-height:1.7;padding:12px;max-width:960px;margin:0 auto}
+h1{font-size:1.35rem;text-align:center;padding:18px 14px;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;border-radius:14px;margin-bottom:14px;line-height:1.4}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tab-btn{flex:1;padding:13px 8px;font-size:1.05rem;border:2px solid #3b82f6;background:#fff;color:#3b82f6;cursor:pointer;border-radius:10px;font-weight:700;transition:.2s}
+.tab-btn.active{background:#3b82f6;color:#fff}
+.tab-btn:hover{opacity:.85}
+.tab-content{display:none}.tab-content.active{display:block}
+.card{background:#fff;border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.inst{color:#64748b;font-size:.92rem;margin-bottom:14px;padding:12px;background:#f1f5f9;border-radius:8px;border-left:4px solid #3b82f6;line-height:1.6}
+.speed-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.speed-row b{font-size:.93rem;margin-right:2px}
+.spd{padding:5px 13px;border:2px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer;font-size:.88rem;transition:.2s}
+.spd.on{border-color:#3b82f6;background:#eff6ff;color:#1d4ed8;font-weight:700}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.btn{padding:10px 18px;border:none;border-radius:9px;cursor:pointer;font-size:.97rem;font-weight:700;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{opacity:.82}
+.bp{background:#2563eb;color:#fff}.bs{background:#64748b;color:#fff}
+.bc{background:#16a34a;color:#fff}.bw{background:#f59e0b;color:#fff}.br{background:#ef4444;color:#fff}
+.bsm{padding:5px 10px;font-size:.84rem;border-radius:7px}
+.ios-note{text-align:center;color:#94a3b8;font-size:.82rem;margin-bottom:10px}
+/* paragraph */
+.psec{margin-bottom:18px}
+.phdr{display:flex;align-items:center;gap:10px;margin-bottom:6px;padding:8px 12px;background:#dbeafe;border-radius:8px;font-weight:700;color:#1e40af;flex-wrap:wrap}
+.srow{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;padding:8px;background:#fafbfc;border-radius:8px;border:2px solid transparent;transition:.25s}
+.srow.ok{border-color:#16a34a;background:#f0fdf4}.srow.no{border-color:#ef4444;background:#fef2f2}
+.snum{min-width:26px;height:26px;background:#3b82f6;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;margin-top:6px;flex-shrink:0}
+.sbody{flex:1;min-width:0}
+.sinp{width:100%;min-height:52px;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:1rem;font-family:inherit;resize:vertical;line-height:1.7}
+.sinp:focus{outline:none;border-color:#3b82f6}
+.sans{display:none;padding:8px 10px;background:#eff6ff;border-radius:6px;font-size:.93rem;color:#1e40af;margin-top:5px;border-left:3px solid #3b82f6;line-height:1.7;word-break:break-all}
+.sans.vis{display:block}
+.sdiff{margin-top:4px;font-size:.9rem;line-height:1.8;word-break:break-all}
+.status{padding:12px;background:#f1f5f9;border-radius:8px;text-align:center;font-size:.95rem;margin-top:12px}
+/* vocab */
+.vrow{display:flex;align-items:center;gap:10px;margin-bottom:9px;padding:10px 12px;background:#fafbfc;border-radius:8px;border:2px solid transparent;transition:.25s;flex-wrap:wrap}
+.vrow.ok{border-color:#16a34a;background:#f0fdf4}.vrow.no{border-color:#ef4444;background:#fef2f2}
+.vnum{min-width:30px;font-weight:700;color:#64748b;font-size:.95rem}
+.vspk{padding:7px 14px;background:#7c3aed;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:1.05rem;transition:.2s;flex-shrink:0}
+.vspk:hover{opacity:.82}
+.vinp{width:140px;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:1.1rem;font-family:inherit;text-align:center}
+.vinp:focus{outline:none;border-color:#7c3aed}
+.vans{display:none;color:#1e40af;font-weight:700;font-size:1.05rem;margin-left:4px}
+.vans.vis{display:inline}
+.vres{font-size:1.15rem;min-width:26px;text-align:center}
+.shuf{padding:9px 18px;background:#7c3aed;color:#fff;border:none;border-radius:9px;cursor:pointer;font-size:.95rem;font-weight:700;margin-bottom:14px;transition:.2s}
+.shuf:hover{opacity:.82}
+details{margin-top:14px}
+summary{cursor:pointer;padding:12px;background:#fef3c7;border-radius:8px;font-weight:700;color:#92400e;font-size:.95rem}
+.prev{padding:14px;background:#fffbeb;border-radius:0 0 8px 8px;font-size:.97rem;line-height:2.2;white-space:pre-wrap}
+@media(max-width:600px){
+  h1{font-size:1.15rem;padding:14px 10px}
+  .srow{flex-direction:column;gap:6px}
+  .snum{margin-top:0}
+  .btn{padding:9px 12px;font-size:.9rem}
+  .vinp{width:110px;font-size:1rem}
+  .vrow{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<h1>中文默寫練習｜第四課 虛擬實境的應用</h1>
+
+<div class="tabs">
+  <button class="tab-btn active" id="t1b" onclick="swTab('p1')">📝 文章默書</button>
+  <button class="tab-btn" id="t2b" onclick="swTab('p2')">📖 字詞聽寫</button>
+</div>
+
+<!-- ===== PART 1 ===== -->
+<div id="p1" class="tab-content active">
+<div class="card">
+  <div class="inst">老師朗讀：逐句讀出，每句先讀前半，停頓，再讀後半；學生聽後默寫。<br>平時不顯示文字，僅在「顯示答案」時才露出。</div>
+  <div class="speed-row"><b>語速：</b>
+    <button class="spd" onclick="setSpd(.8,this)">0.80×</button>
+    <button class="spd" onclick="setSpd(.85,this)">0.85×</button>
+    <button class="spd on" onclick="setSpd(.9,this)">0.90×</button>
+    <button class="spd" onclick="setSpd(1,this)">1.00×</button>
+    <button class="spd" onclick="setSpd(1.05,this)">1.05×</button>
+  </div>
+  <div class="ctrls">
+    <button class="btn bp" onclick="playAll()">▶ 播放全文（半句＋半句）</button>
+    <button class="btn bs" onclick="stopTTS()">⏹ 停止語音</button>
+  </div>
+  <p class="ios-note">若未出聲，請先點擊頁面；iOS 需互動後才可播放。</p>
+  <div id="artBox"></div>
+  <div class="ctrls" style="margin-top:14px">
+    <button class="btn bc" onclick="chkArt()">✅ 批改</button>
+    <button class="btn bw" onclick="showArt()">👀 顯示全部答案</button>
+    <button class="btn br" onclick="rstArt()">♻️ 重設</button>
+  </div>
+  <div class="status" id="artSt">尚未批改。</div>
+  <details>
+    <summary>教師預覽全文（不建議課堂顯示給學生）</summary>
+    <div class="prev" id="tprev"></div>
+  </details>
+</div>
+</div>
+
+<!-- ===== PART 2 ===== -->
+<div id="p2" class="tab-content">
+<div class="card">
+  <div class="inst">聆聽廣東話讀音，在空格內寫出字詞。<br>次序每次隨機排列，按 🔊 可重複聆聽。</div>
+  <button class="shuf" onclick="doShuffle()">🔀 重新隨機排列</button>
+  <div id="vocBox"></div>
+  <div class="ctrls" style="margin-top:14px">
+    <button class="btn bc" onclick="chkVoc()">✅ 批改</button>
+    <button class="btn bw" onclick="showVoc()">👀 顯示全部答案</button>
+    <button class="btn br" onclick="rstVoc()">♻️ 重設</button>
+  </div>
+  <div class="status" id="vocSt">尚未批改。</div>
+</div>
+</div>
+
+<script>
+/* ========== DATA ========== */
+const PARAS=[
+  {l:"第一段",s:[
+    "虛擬實境（virtual reality，縮寫為VR）是甚麼？",
+    "簡單來說，就是在電腦建構一個三維立體空間的虛構情境，只要人們戴上特定裝置，進入這個虛構情境後，就如同身處真實世界。",
+    "近年，虛擬實境的技術越來越成熟，不少範疇如娛樂、教育、醫學等都應用這項技術，以提升產品或服務的質量。"
+  ]},
+  {l:"第二段",s:[
+    "娛樂方面，虛擬實境能大大提升遊戲趣味。",
+    "電子遊戲生產商推出各款虛擬實境遊戲，比傳統的電子遊戲更具吸引力，受用家歡迎。",
+    "人們戴上一個既像頭盔又像眼鏡的虛擬實境裝置後，視覺會被它帶引着，除了仿如置身海底、森林或是太空，還會在視覺及聽覺方面得到強烈的刺激。"
+  ]},
+  {l:"第三段",s:[
+    "教育方面，老師可以運用虛擬實境技術輔助教學。",
+    "在香港，地理課每週只有兩節課，不可能常常做實地考察。",
+    "有的學校開設了虛擬實境地理教室，身處校園的學生戴上學習眼鏡後，立即進入佔地六十一公頃的虛擬香港濕地公園，參觀一萬平方呎的室內展館，觀察地貌，「親身」感受，使學習過程更有趣、更有效。"
+  ]},
+  {l:"第四段",s:[
+    "醫學方面，虛擬實境技術主要應用在培護人員和醫治病人上。",
+    "通過虛擬實境，護士能從多角度觀察人體器官，了解人體運作。",
+    "實習醫生看着虛擬實境眼鏡裏投射出來的病人，練習做手術。",
+    "另外，有些醫生讓畏高症病患者置身於虛擬的高樓大廈上，從「上」往「下」望，幫助患者在安全的環境下克服畏高症。"
+  ]},
+  {l:"第五段",s:[
+    "總括而言，虛擬實境能廣泛地應用在不同領域。",
+    "我們應該多了解日新月異的科技發展，繼而把科技的用途進一步發揮，貢獻社會，這將是世界公民之福。"
+  ]}
+];
+const VOCAB=["虛擬","建構","虛構","範疇","技術","質量","娛樂","仿如","刺激","輔助","考察","有效","培訓","解","廣泛","領域","日新月異","發揮"];
+
+/* ========== STATE ========== */
+let rate=0.9, playing=false, stopReq=false, shufV=[];
+
+/* ========== TABS ========== */
+function swTab(id){
+  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id==='p1'?'t1b':'t2b').classList.add('active');
+}
+
+/* ========== SPEED ========== */
+function setSpd(r,b){rate=r;document.querySelectorAll('.spd').forEach(x=>x.classList.remove('on'));if(b)b.classList.add('on');}
+
+/* ========== TTS ========== */
+function getV(){
+  const v=speechSynthesis.getVoices();
+  return v.find(x=>x.lang==='zh-HK')||v.find(x=>x.lang.startsWith('zh-HK'))||v.find(x=>x.lang.startsWith('zh'))||null;
+}
+function say(txt){
+  return new Promise(res=>{
+    if(stopReq){res();return;}
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='zh-HK';u.rate=rate;
+    const v=getV();if(v)u.voice=v;
+    u.onend=res;u.onerror=res;
+    speechSynthesis.speak(u);
+  });
+}
+function wait(ms){
+  return new Promise(res=>{
+    const t0=Date.now();
+    (function ck(){if(stopReq||Date.now()-t0>=ms)res();else setTimeout(ck,50);})();
+  });
+}
+function stopTTS(){stopReq=true;playing=false;speechSynthesis.cancel();}
+
+/* split sentence at a comma near the middle (skip commas inside parentheses) */
+function halfSplit(s){
+  let d=0;const cs=[];
+  for(let i=0;i<s.length;i++){
+    if(s[i]==='（'||s[i]==='(')d++;
+    if(s[i]==='）'||s[i]===')')d--;
+    if(s[i]==='，'&&d===0)cs.push(i);
+  }
+  if(!cs.length)return[s];
+  const mid=s.length/2;let best=cs[0],bd=Math.abs(cs[0]-mid);
+  cs.forEach(p=>{const dd=Math.abs(p-mid);if(dd<bd){bd=dd;best=p;}});
+  return[s.substring(0,best+1),s.substring(best+1)];
+}
+async function saySent(s){
+  const h=halfSplit(s);
+  for(let i=0;i<h.length;i++){
+    if(stopReq)return;
+    await say(h[i]);
+    if(i<h.length-1)await wait(1400);
+  }
+}
+async function playPara(pi){
+  if(playing){stopTTS();await wait(250);}
+  stopReq=false;playing=true;
+  for(const s of PARAS[pi].s){if(stopReq)break;await saySent(s);await wait(2800);}
+  playing=false;
+}
+async function playAll(){
+  if(playing){stopTTS();await wait(250);}
+  stopReq=false;playing=true;
+  for(let p=0;p<PARAS.length;p++){
+    for(const s of PARAS[p].s){if(stopReq)break;await saySent(s);await wait(2800);}
+    if(stopReq)break;await wait(3800);
+  }
+  playing=false;
+}
+async function playOne(pi,si){
+  if(playing){stopTTS();await wait(250);}
+  stopReq=false;playing=true;
+  await saySent(PARAS[pi].s[si]);
+  playing=false;
+}
+
+/* ========== BUILD ARTICLE ========== */
+function buildArt(){
+  const box=document.getElementById('artBox');
+  let h='',idx=0;
+  PARAS.forEach((p,pi)=>{
+    h+=`<div class="psec"><div class="phdr"><span>${p.l}</span><button class="btn bp bsm" onclick="playPara(${pi})">▶ 播放本段</button></div>`;
+    p.s.forEach((s,si)=>{
+      const rows=Math.max(2,Math.ceil(s.length/28));
+      h+=`<div class="srow" id="sr${idx}">
+        <div class="snum">${idx+1}</div>
+        <div class="sbody">
+          <textarea class="sinp" id="si${idx}" rows="${rows}" placeholder="在此默寫…"></textarea>
+          <div class="sans" id="sa${idx}">${esc(s)}</div>
+          <div class="sdiff" id="sd${idx}"></div>
+        </div>
+        <button class="btn bp bsm" onclick="playOne(${pi},${si})" title="播放此句">🔊</button>
+      </div>`;
+      idx++;
+    });
+    h+=`</div>`;
+  });
+  box.innerHTML=h;
+
+  /* auto-resize textareas */
+  document.querySelectorAll('.sinp').forEach(ta=>{
+    ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';});
+  });
+
+  /* teacher preview */
+  let pv="第四課\n虛擬實境的應用\n\n";
+  PARAS.forEach(p=>{pv+=p.s.join('')+'\n\n';});
+  document.getElementById('tprev').textContent=pv.trim();
+}
+
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function norm(t){return t.replace(/[\s\u3000]+/g,'');}
+
+/* ========== CHECK ARTICLE ========== */
+function chkArt(){
+  let ok=0,tot=0,idx=0;
+  PARAS.forEach(p=>{p.s.forEach(s=>{
+    const inp=document.getElementById('si'+idx);
+    const row=document.getElementById('sr'+idx);
+    const ans=document.getElementById('sa'+idx);
+    const dif=document.getElementById('sd'+idx);
+    const uTxt=norm(inp.value), cTxt=norm(s);
+    row.classList.remove('ok','no');dif.innerHTML='';
+    if(uTxt===cTxt){row.classList.add('ok');ok++;}
+    else if(uTxt.length>0){row.classList.add('no');ans.classList.add('vis');dif.innerHTML=diffHTML(uTxt,cTxt);}
+    else{row.classList.add('no');ans.classList.add('vis');}
+    tot++;idx++;
+  });});
+  document.getElementById('artSt').innerHTML=`批改結果：共 <b>${tot}</b> 句，答對 <b style="color:#16a34a">${ok}</b> 句，答錯 <b style="color:#ef4444">${tot-ok}</b> 句`;
+}
+
+function diffHTML(u,c){
+  /* simple char-by-char diff */
+  let h='<span style="font-size:.88rem;color:#64748b">逐字對比：</span><br>';
+  const ul=[...u],cl=[...c],mx=Math.max(ul.length,cl.length);
+  for(let i=0;i<mx;i++){
+    if(i<ul.length&&i<cl.length){
+      if(ul[i]===cl[i])h+=`<span style="color:#16a34a">${esc(cl[i])}</span>`;
+      else h+=`<span style="background:#fecaca;color:#dc2626;text-decoration:line-through">${esc(ul[i])}</span><span style="background:#bbf7d0;color:#166534">${esc(cl[i])}</span>`;
+    }else if(i>=ul.length){
+      h+=`<span style="background:#fef08a;color:#854d0e">${esc(cl[i])}</span>`;
+    }else{
+      h+=`<span style="background:#fecaca;color:#dc2626;text-decoration:line-through">${esc(ul[i])}</span>`;
+    }
+  }
+  return h;
+}
+
+function showArt(){document.querySelectorAll('.sans').forEach(e=>e.classList.add('vis'));}
+function rstArt(){
+  let idx=0;
+  PARAS.forEach(p=>{p.s.forEach(()=>{
+    document.getElementById('si'+idx).value='';
+    document.getElementById('si'+idx).style.height='';
+    document.getElementById('sa'+idx).classList.remove('vis');
+    document.getElementById('sd'+idx).innerHTML='';
+    document.getElementById('sr'+idx).classList.remove('ok','no');
+    idx++;
+  });});
+  document.getElementById('artSt').textContent='尚未批改。';
+}
+
+/* ========== VOCAB ========== */
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function buildVoc(){shufV=shuf(VOCAB);renderVoc();}
+function renderVoc(){
+  const box=document.getElementById('vocBox');
+  let h='';
+  shufV.forEach((w,i)=>{
+    h+=`<div class="vrow" id="vr${i}">
+      <span class="vnum">${i+1}.</span>
+      <button class="vspk" onclick="sayW('${w}')" title="播放讀音">🔊</button>
+      <input type="text" class="vinp" id="vi${i}" placeholder="寫出字詞">
+      <span class="vans" id="va${i}">${w}</span>
+      <span class="vres" id="vx${i}"></span>
+    </div>`;
+  });
+  box.innerHTML=h;
+}
+function sayW(w){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(w);
+  u.lang='zh-HK';u.rate=Math.max(rate-.05,.55);
+  const v=getV();if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function doShuffle(){shufV=shuf(VOCAB);renderVoc();document.getElementById('vocSt').textContent='已重新排列，尚未批改。';}
+function chkVoc(){
+  let ok=0;
+  shufV.forEach((w,i)=>{
+    const row=document.getElementById('vr'+i);
+    const res=document.getElementById('vx'+i);
+    const ans=document.getElementById('va'+i);
+    const uTxt=norm(document.getElementById('vi'+i).value),cTxt=norm(w);
+    row.classList.remove('ok','no');
+    if(uTxt===cTxt){row.classList.add('ok');res.textContent='✅';ok++;}
+    else{row.classList.add('no');res.textContent='❌';ans.classList.add('vis');}
+  });
+  document.getElementById('vocSt').innerHTML=`批改結果：共 <b>${shufV.length}</b> 詞，答對 <b style="color:#16a34a">${ok}</b> 詞，答錯 <b style="color:#ef4444">${shufV.length-ok}</b> 詞`;
+}
+function showVoc(){document.querySelectorAll('.vans').forEach(e=>e.classList.add('vis'));}
+function rstVoc(){
+  shufV.forEach((_,i)=>{
+    document.getElementById('vi'+i).value='';
+    document.getElementById('va'+i).classList.remove('vis');
+    document.getElementById('vr'+i).classList.remove('ok','no');
+    document.getElementById('vx'+i).textContent='';
+  });
+  document.getElementById('vocSt').textContent='尚未批改。';
+}
+
+/* ========== INIT ========== */
+speechSynthesis.onvoiceschanged=()=>{};
+window.addEventListener('DOMContentLoaded',()=>{speechSynthesis.getVoices();buildArt();buildVoc();});
+</script>
+</body>
+</html>
