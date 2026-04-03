@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中文默寫練習｜沒有牙齒的大老虎｜背水慈善行｜石灰吟</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .correct { border-color: #16a34a; box-shadow: 0 0 0 1px #16a34a66; }
+    .wrong { border-color: #dc2626; box-shadow: 0 0 0 1px #dc262666; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="max-w-5xl mx-auto px-4 py-6 space-y-8">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold">中文默寫練習</h1>
+      <p class="text-sm text-slate-600">若未出聲，請先點擊頁面；部分 iOS／瀏覽器需用戶互動後才可播放語音。</p>
+    </header>
+
+    <!-- Part 1 -->
+    <section id="part1" class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-semibold">第 1 部份：課文默書｜第五課《沒有牙齒的大老虎》</h2>
+          <p class="text-xs text-slate-600">半句朗讀停頓再續句</p>
+        </div>
+        <div class="flex items-center gap-2 text-sm flex-wrap">
+          <span class="text-slate-700">語速：</span>
+          <div class="flex items-center gap-2 flex-wrap" id="rate-group-1"></div>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        <button data-play-all="1" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">▶ 播放全篇（半句＋半句）</button>
+        <button data-stop class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">⏹ 停止語音</button>
+        <button data-grade="1" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ 批改</button>
+        <button data-show-all="1" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 顯示全部答案</button>
+        <button data-reset="1" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ 重設</button>
+      </div>
+      <p data-status="1" class="text-sm text-slate-600">尚未批改。</p>
+      <div data-container="1" class="space-y-3"></div>
+    </section>
+
+    <!-- Part 2 -->
+    <section id="part2" class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 class="text-xl font-semibold">第 2 部份：字詞讀點｜第七課《背水慈善行》</h2>
+          <p class="text-xs text-amber-600">點擊 🔊 以廣東話讀出字詞；若未出聲，請點擊頁面以啟用語音。</p>
+        </div>
+        <div class="flex items-center gap-2 text-sm flex-wrap">
+          <button id="btnShuffleVocab" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">🔀 重排</button>
+          <button id="btnGradeVocab" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ 批改字詞</button>
+          <button id="btnShowVocab" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 顯示答案</button>
+          <button id="btnResetVocab" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ 重設</button>
+        </div>
+      </div>
+      <div id="vocabContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <p id="statusVocab" class="text-sm text-slate-600">尚未批改。</p>
+    </section>
+
+    <!-- Part 3 -->
+    <section id="part3" class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-semibold">第 3 部份：課文默書｜于謙《石灰吟》</h2>
+          <p class="text-xs text-slate-600">半句朗讀停頓再續句</p>
+        </div>
+        <div class="flex items-center gap-2 text-sm flex-wrap">
+          <span class="text-slate-700">語速：</span>
+          <div class="flex items-center gap-2 flex-wrap" id="rate-group-3"></div>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        <button data-play-all="3" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">▶ 播放全篇（半句＋半句）</button>
+        <button data-stop class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">⏹ 停止語音</button>
+        <button data-grade="3" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ 批改</button>
+        <button data-show-all="3" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 顯示全部答案</button>
+        <button data-reset="3" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ 重設</button>
+      </div>
+      <p data-status="3" class="text-sm text-slate-600">尚未批改。</p>
+      <div data-container="3" class="space-y-3"></div>
+    </section>
+  </div>
+
+  <script>
+    // Data
+    const part1Lines = [
+      "第五課",
+      "沒有牙齒的大老虎",
+      "大老虎正要刷牙，",
+      "狐狸來了，",
+      "說：",
+      "唉，你把牙齒上黏着的",
+      "糖屑全刷掉，",
+      "多可惜呀！",
+      "貪吃的大老虎",
+      "聽了狐狸的話，",
+      "從此就不刷牙了。",
+      "過了些時候，",
+      "大老虎由於",
+      "吃了太多糖，",
+      "再加上沒有刷牙，",
+      "所以牙痛得很。",
+      "牠連忙找",
+      "馬大夫拔牙。",
+      "馬大夫一聽要給",
+      "大老虎拔牙，",
+      "嚇得連門",
+      "也不敢開了。",
+      "大老虎又去找牛大夫。",
+      "牛大夫慌忙說：",
+      "我……我不拔你的牙…⋯",
+      "驢大夫同樣",
+      "不敢替大老虎拔牙。",
+      "大老虎的臉腫起來了，",
+      "痛得直喊：",
+      "誰替我把牙拔掉，",
+      "我就讓牠做大王！",
+      "這時候，",
+      "狐狸穿着白大衣來了，",
+      "說：我來拔吧。",
+      "老虎謝了又謝。",
+      "哎喲，你的牙全蛀了，",
+      "得全部拔掉。",
+      "狐狸說。",
+      "嗯，只要牙不再痛，",
+      "就拔吧！",
+      "老虎哭着說。",
+      "嗬，狐狸把老虎的牙",
+      "全部拔掉了。",
+      "老虎的嘴巴",
+      "凹了下去，",
+      "變成一隻",
+      "沒有牙齒的老虎。",
+      "老虎還挺感激狐狸呢，",
+      "牠說：還是狐狸好，",
+      "又送我糖吃，",
+      "又替我拔牙。"
+    ];
+
+    const part3Lines = [
+      "千錘萬擊出深山，",
+      "烈火焚燒若等閑。",
+      "粉骨碎身全不怕，",
+      "要留清白在人間。"
+    ];
+
+    const vocabList = [
+      "舉辦","慈善","困境","咬緊牙關","籌募","另當別論",
+      "氣喘吁吁","筋疲力盡","真切","翻山越嶺","崎嶇","理所當然",
+      "資源","節約","匯聚","汪洋大海"
+    ];
+
+    // Helpers
+    const normalize = (str) => str.replace(/[\s\r\n\t]/g, "")
+      .replace(/[，。、．。？！；：「」『』（）()‧,.;:!?]/g, "")
+      .toLowerCase();
+
+    const preferredVoices = ["yue-Hant-HK","zh-HK","zh-TW","zh-CN"];
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      return voices.find(v => preferredVoices.includes(v.lang)) || null;
+    };
+
+    const speak = (text, rate=1) => {
+      if (!("speechSynthesis" in window) || !text) return;
+      const u = new SpeechSynthesisUtterance(text);
+      const v = pickVoice();
+      if (v) u.voice = v;
+      u.lang = v ? v.lang : "zh-HK";
+      u.rate = rate;
+      speechSynthesis.speak(u);
+    };
+
+    const splitHalf = (sentence) => {
+      const idx = sentence.indexOf("，");
+      if (idx > -1 && idx < sentence.length - 1) {
+        return [sentence.slice(0, idx+1), sentence.slice(idx+1)];
+      }
+      const mid = Math.max(1, Math.floor(sentence.length/2));
+      return [sentence.slice(0, mid), sentence.slice(mid)];
+    };
+
+    // Toast
+    function toast(msg){
+      let bar = document.getElementById("toast");
+      if (!bar){
+        bar = document.createElement("div");
+        bar.id = "toast";
+        bar.className = "fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-slate-900 text-white text-sm shadow transition-opacity duration-300";
+        document.body.appendChild(bar);
+      }
+      bar.textContent = msg;
+      bar.style.opacity = "1";
+      setTimeout(()=>{ bar.style.opacity = "0"; }, 1800);
+    }
+
+    // Build rate selectors
+    const rateOptions = [0.2,0.3,0.5,0.7,0.9,0.95,1,1.05];
+    function renderRate(groupId, defaultVal=1){
+      const wrap = document.getElementById(groupId);
+      wrap.innerHTML = "";
+      rateOptions.forEach(r=>{
+        const label = document.createElement("label");
+        label.className = "flex items-center gap-1 cursor-pointer";
+        label.innerHTML = `<input type="radio" name="${groupId}" value="${r}" class="accent-emerald-600" ${r===defaultVal?'checked':''}><span>${r.toFixed(2)}×</span>`;
+        wrap.appendChild(label);
+      });
+    }
+    renderRate("rate-group-1",1);
+    renderRate("rate-group-3",1);
+
+    // Build dictation section
+    function buildDictation(containerId, lines, sectionKey){
+      const wrap = document.querySelector(`[data-container="${sectionKey}"]`);
+      wrap.innerHTML = "";
+      lines.forEach((line, i)=>{
+        const block = document.createElement("div");
+        block.className = "bg-slate-100 rounded border border-slate-200 p-3";
+        block.innerHTML = `
+          <div class="flex items-center justify-between mb-2 gap-2">
+            <div class="text-sm font-semibold text-slate-700">第 ${i+1} 行</div>
+            <div class="flex items-center gap-3 text-sm flex-wrap">
+              <button data-tts-line="${sectionKey}-${i}" class="text-emerald-700 hover:underline">🔊 半句朗讀</button>
+              <button data-show-line="${sectionKey}-${i}" class="text-amber-600 hover:underline">👀 顯示答案</button>
+            </div>
+          </div>
+          <textarea rows="2" data-ref="${sectionKey}-${i}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="請默寫此行"></textarea>
+          <div class="text-sm text-emerald-700 mt-2 hidden answer-line">${line}</div>
+        `;
+        wrap.appendChild(block);
+      });
+    }
+
+    buildDictation("part1", part1Lines, 1);
+    buildDictation("part3", part3Lines, 3);
+
+    // Event for per-line actions
+    document.addEventListener("click", (e)=>{
+      const ttsBtn = e.target.closest("[data-tts-line]");
+      if (ttsBtn){
+        const key = ttsBtn.getAttribute("data-tts-line"); // e.g., "1-3"
+        const [sec, idx] = key.split("-").map(Number);
+        const dataLines = sec===1 ? part1Lines : part3Lines;
+        const lineText = dataLines[idx] || "";
+        const rate = Number(document.querySelector(`input[name="rate-group-${sec}"]:checked`)?.value || 1);
+        speechSynthesis.cancel();
+        const halves = splitHalf(lineText.trim()).filter(Boolean);
+        halves.forEach(seg => speak(seg, rate));
+        return;
+      }
+      const showBtn = e.target.closest("[data-show-line]");
+      if (showBtn){
+        const key = showBtn.getAttribute("data-show-line");
+        const [sec, idx] = key.split("-").map(Number);
+        const container = document.querySelector(`[data-container="${sec}"]`);
+        const ansEl = container?.querySelectorAll(".answer-line")[idx];
+        if (ansEl) ansEl.classList.toggle("hidden");
+        return;
+      }
+    });
+
+    // Controls (play all / grade / show all / reset)
+    document.addEventListener("click", (e)=>{
+      const playAll = e.target.closest("[data-play-all]");
+      if (playAll){
+        const sec = Number(playAll.getAttribute("data-play-all"));
+        const lines = sec===1 ? part1Lines : part3Lines;
+        const rate = Number(document.querySelector(`input[name="rate-group-${sec}"]:checked`)?.value || 1);
+        speechSynthesis.cancel();
+        lines.forEach(line=>{
+          const halves = splitHalf(line.trim()).filter(Boolean);
+          halves.forEach(seg => speak(seg, rate));
+        });
+      }
+
+      const stopBtn = e.target.closest("[data-stop]");
+      if (stopBtn){
+        speechSynthesis.cancel();
+      }
+
+      const gradeBtn = e.target.closest("[data-grade]");
+      if (gradeBtn){
+        const sec = Number(gradeBtn.getAttribute("data-grade"));
+        const lines = sec===1 ? part1Lines : part3Lines;
+        let total=0, correct=0;
+        lines.forEach((line,i)=>{
+          const field = document.querySelector(`textarea[data-ref="${sec}-${i}"]`);
+          total++;
+          if (normalize(field.value) === normalize(line)){
+            correct++; field.classList.add("correct"); field.classList.remove("wrong");
+          }else{
+            field.classList.add("wrong"); field.classList.remove("correct");
+          }
+        });
+        const status = document.querySelector(`[data-status="${sec}"]`);
+        if (status) status.textContent = `已批改：${correct} / ${total} 行。`;
+      }
+
+      const showAllBtn = e.target.closest("[data-show-all]");
+      if (showAllBtn){
+        const sec = Number(showAllBtn.getAttribute("data-show-all"));
+        const container = document.querySelector(`[data-container="${sec}"]`);
+        container?.querySelectorAll(".answer-line").forEach(el=>el.classList.toggle("hidden"));
+      }
+
+      const resetBtn = e.target.closest("[data-reset]");
+      if (resetBtn){
+        const sec = Number(resetBtn.getAttribute("data-reset"));
+        const container = document.querySelector(`[data-container="${sec}"]`);
+        container?.querySelectorAll("textarea").forEach(t=>{
+          t.value=""; t.classList.remove("correct","wrong");
+        });
+        const status = document.querySelector(`[data-status="${sec}"]`);
+        if (status) status.textContent = "尚未批改。";
+      }
+    });
+
+    // Vocab section
+    const vocabContainer = document.getElementById("vocabContainer");
+    function shuffle(arr){
+      const a = [...arr];
+      for (let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+    function renderVocab(list){
+      vocabContainer.innerHTML = "";
+      list.forEach((word, idx)=>{
+        const card = document.createElement("div");
+        card.className = "border border-slate-200 rounded p-3 bg-slate-50";
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm font-semibold text-slate-700">#${idx+1}</div>
+            <button class="text-emerald-700 text-sm hover:underline" data-say="${word}">🔊</button>
+          </div>
+          <input data-word="${word}" type="text" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="請輸入字詞">
+          <div class="text-sm text-emerald-700 mt-1 hidden vocab-ans">${word}</div>
+        `;
+        vocabContainer.appendChild(card);
+      });
+    }
+    renderVocab(shuffle(vocabList));
+
+    vocabContainer.addEventListener("click",(e)=>{
+      const btn = e.target.closest("[data-say]");
+      if (!btn) return;
+      const word = btn.getAttribute("data-say");
+      speak(word,1);
+    });
+
+    document.getElementById("btnShuffleVocab").onclick = ()=>renderVocab(shuffle(vocabList));
+
+    document.getElementById("btnShowVocab").onclick = ()=>{
+      document.querySelectorAll(".vocab-ans").forEach(el=>el.classList.toggle("hidden"));
+    };
+
+    document.getElementById("btnResetVocab").onclick = ()=>{
+      document.querySelectorAll('#vocabContainer input').forEach(inp=>{
+        inp.value=""; inp.classList.remove("correct","wrong");
+      });
+      document.getElementById("statusVocab").textContent = "尚未批改.";
+    };
+
+    document.getElementById("btnGradeVocab").onclick = ()=>{
+      let total=0, correct=0;
+      document.querySelectorAll('#vocabContainer input').forEach(inp=>{
+        total++;
+        const ans = inp.getAttribute("data-word");
+        if (normalize(inp.value) === normalize(ans)){
+          correct++; inp.classList.add("correct"); inp.classList.remove("wrong");
+        }else{
+          inp.classList.add("wrong"); inp.classList.remove("correct");
+        }
+      });
+      document.getElementById("statusVocab").textContent = `已批改：${correct} / ${total}。`;
+      toast(`字詞批改：${correct} / ${total}`);
+    };
+
+    // Warm up voices
+    if (window.speechSynthesis){
+      speechSynthesis.getVoices();
+      if (typeof speechSynthesis.onvoiceschanged !== "undefined"){
+        speechSynthesis.onvoiceschanged = ()=>{};
+      }
+    }
+  </script>
+</body>
+</html>
