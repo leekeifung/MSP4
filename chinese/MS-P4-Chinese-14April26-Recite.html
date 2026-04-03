@@ -15,7 +15,7 @@
     <header class="space-y-2">
       <h1 class="text-2xl font-bold text-slate-900">中文默寫練習｜第四課《虛擬實境的應用》</h1>
       <p class="text-sm text-slate-600">第 1 部份：課文默書（半句朗讀停頓再續句）｜第 2 部份：字詞讀點（可隨機排列、廣東話讀音）</p>
-      <p class="text-xs text-amber-600">若無法出聲，請先點擊頁面；部分 iOS／瀏覽器需用戶互動後才可播放語音。</p>
+      <p class="text-xs text-amber-600">若未出聲，請先點擊頁面；部分 iOS／瀏覽器需用戶互動後才可播放語音。</p>
     </header>
 
     <!-- Part 1: 課文默書 -->
@@ -24,7 +24,23 @@
         <h2 class="text-xl font-semibold text-slate-900">第 1 部份：課文默書</h2>
         <div class="flex items-center gap-2 text-sm">
           <span class="text-slate-700">語速：</span>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input type="radio" name="rate" value="0.2" class="accent-emerald-600" />
+              <span>0.20×</span>
+            </label>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input type="radio" name="rate" value="0.3" class="accent-emerald-600" />
+              <span>0.30×</span>
+            </label>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input type="radio" name="rate" value="0.5" class="accent-emerald-600" />
+              <span>0.50×</span>
+            </label>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input type="radio" name="rate" value="0.7" class="accent-emerald-600" />
+              <span>0.70×</span>
+            </label>
             <label class="flex items-center gap-1 cursor-pointer">
               <input type="radio" name="rate" value="0.9" class="accent-emerald-600" />
               <span>0.90×</span>
@@ -54,19 +70,7 @@
       </div>
       <p id="statusText" class="text-sm text-slate-600">尚未批改。</p>
 
-      <div class="space-y-4">
-        <div class="p-3 rounded bg-slate-100">
-          <div class="text-sm font-semibold text-slate-700 mb-2">標題</div>
-          <textarea data-ref="title" rows="2" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="請默寫：第四課｜虛擬實境的應用"></textarea>
-          <div class="text-sm text-emerald-700 mt-2 hidden answer-line">第四課｜虛擬實境的應用</div>
-        </div>
-
-        <!-- Paragraphs -->
-        <div class="p-3 rounded bg-slate-100 space-y-3">
-          <div class="text-sm font-semibold text-slate-700">正文段落</div>
-          <div class="space-y-3" id="paraContainer"></div>
-        </div>
-      </div>
+      <div class="space-y-3" id="paraContainer"></div>
     </section>
 
     <!-- Part 2: 字詞讀點 -->
@@ -86,31 +90,88 @@
   </div>
 
   <script>
-    // --- Data ---
-    const paragraphs = [
-      "虛擬實境（virtual reality，縮寫為VR） 是甚麼？簡單來說，就是在電腦建構一個三維立體空間的虛構情境，只要人們戴上特定裝置，進入這個虛構情境後，就如同身處真實世界。近年，虛擬實境的技術越來越成熟，不少範疇如娛樂、教育、醫學等都應用這項技術，以提升產品或服務的質量。",
-      "娛樂方面，虛擬實境能大大提升遊戲趣味。電子遊戲生產商推出各款虛擬實境遊戲，比傳統的電子遊戲更具吸引力，受用家歡迎。人們戴上一個既像頭盔又像眼鏡的虛擬實境裝置後，視覺會被它帶引着，除了仿如置身海底、森林或是太空，還會在視覺及聽覺方面得到強烈的刺激。",
-      "教育方面，老師可以運用虛擬實境技術輔助教學。在香港，地理課每週只有兩節課，不可能常常做實地考察。有的學校開設了虛擬實境地理教室，身處校園的學生戴上學習眼鏡後，立即進入佔地六十一公頃的虛擬香港濕地公園，參觀一萬平方呎的室內展館，觀察地貌，「親身」感受，使學習過程更有趣、更有效。",
-      "醫學方面，虛擬實境技術主要應用在培護人員和醫治病人上。通過虛擬實境，護士能從多角度觀察人體器官，了解人體運作。實習醫生看着虛擬實境眼鏡裏投射出來的病人，練習做手術。另外，有些醫生讓畏高症病患者置身於虛擬的高樓大廈上，從「上」往「下」望，幫助患者在安全的環境下克服畏高症。",
-      "總括而言，虛擬實境能廣泛地應用在不同領域。我們應該多了解日新月異的科技發展，繼而把科技的用途進一步發揮，貢獻社會，這將是世界公民之福。"
+    // --- Data (分行默寫) ---
+    const linesRaw = [
+      "第四課",
+      "虛擬實境的應用",
+      "虛擬實境（virtual reality，縮寫為VR） 是甚麼？",
+      "簡單來說，",
+      "就是在電腦建構一個三維立體空間的虛構情境，",
+      "只要人們戴上特定裝置，",
+      "進入這個虛構情境後，",
+      "就如同身處真實世界。",
+      "近年，",
+      "虛擬實境的技術越來越成熟，",
+      "不少範疇如娛樂、教育、醫學等",
+      "都應用這項技術，",
+      "以提升產品或服務的質量。",
+      "娛樂方面，",
+      "虛擬實境能大大提升遊戲趣味。",
+      "電子遊戲生產商",
+      "推出各款虛擬實境遊戲，",
+      "比傳統的",
+      "電子遊戲更具吸引力，",
+      "受用家歡迎。",
+      "人們戴上一個",
+      "既像頭盔又像眼鏡的",
+      "虛擬實境裝置後，",
+      "視覺會被它帶引着，",
+      "除了仿如置身",
+      "海底、森林或是太空，",
+      "還會在視覺及聽覺方面",
+      "得到強烈的刺激。",
+      "教育方面，",
+      "老師可以運用",
+      "虛擬實境技術輔助教學。",
+      "在香港，地理課每週只有兩節課，",
+      "不可能常常做實地考察。",
+      "有的學校開設了",
+      "虛擬實境地理教室，",
+      "身處校園的學生",
+      "戴上學習眼鏡後，",
+      "立即進入佔地六十一公頃的",
+      "虛擬香港濕地公園，",
+      "參觀一萬平方呎的",
+      "室內展館，",
+      "觀察地貌，",
+      "「親身」感受，",
+      "使學習過程",
+      "更有趣、更有效。",
+      "醫學方面，虛擬實境技術",
+      "主要應用在",
+      "培護人員和醫治病人上。",
+      "通過虛擬實境，",
+      "護士能從多角度觀察人體器官，",
+      "了解人體運作。",
+      "實習醫生看着虛擬實境眼鏡裏",
+      "投射出來的病人，",
+      "練習做手術。",
+      "另外，有些醫生讓畏高症病患者",
+      "置身於虛擬的高樓大廈上，",
+      "從「上」往「下」望，",
+      "幫助患者在安全的環境下",
+      "克服畏高症。",
+      "總括而言，",
+      "虛擬實境能廣泛地",
+      "應用在不同領域。",
+      "我們應該多了解",
+      "日新月異的科技發展，",
+      "繼而把科技的用途",
+      "進一步發揮，",
+      "貢獻社會，",
+      "這將是世界公民之福。"
     ];
+    const lines = linesRaw.filter(l => l.trim().length > 0);
 
+    // Sentences for Play All
     const sentencesForTTS = [
       "虛擬實境（virtual reality，縮寫為VR） 是甚麼？",
       "簡單來說，就是在電腦建構一個三維立體空間的虛構情境，只要人們戴上特定裝置，進入這個虛構情境後，就如同身處真實世界。",
       "近年，虛擬實境的技術越來越成熟，不少範疇如娛樂、教育、醫學等都應用這項技術，以提升產品或服務的質量。",
-      "娛樂方面，虛擬實境能大大提升遊戲趣味。",
-      "電子遊戲生產商推出各款虛擬實境遊戲，比傳統的電子遊戲更具吸引力，受用家歡迎。",
-      "人們戴上一個既像頭盔又像眼鏡的虛擬實境裝置後，視覺會被它帶引着，除了仿如置身海底、森林或是太空，還會在視覺及聽覺方面得到強烈的刺激。",
-      "教育方面，老師可以運用虛擬實境技術輔助教學。",
-      "在香港，地理課每週只有兩節課，不可能常常做實地考察。",
-      "有的學校開設了虛擬實境地理教室，身處校園的學生戴上學習眼鏡後，立即進入佔地六十一公頃的虛擬香港濕地公園，參觀一萬平方呎的室內展館，觀察地貌，「親身」感受，使學習過程更有趣、更有效。",
-      "醫學方面，虛擬實境技術主要應用在培護人員和醫治病人上。",
-      "通過虛擬實境，護士能從多角度觀察人體器官，了解人體運作。",
-      "實習醫生看着虛擬實境眼鏡裏投射出來的病人，練習做手術。",
-      "另外，有些醫生讓畏高症病患者置身於虛擬的高樓大廈上，從「上」往「下」望，幫助患者在安全的環境下克服畏高症。",
-      "總括而言，虛擬實境能廣泛地應用在不同領域。",
-      "我們應該多了解日新月異的科技發展，繼而把科技的用途進一步發揮，貢獻社會，這將是世界公民之福。"
+      "娛樂方面，虛擬實境能大大提升遊戲趣味。電子遊戲生產商推出各款虛擬實境遊戲，比傳統的電子遊戲更具吸引力，受用家歡迎。人們戴上一個既像頭盔又像眼鏡的虛擬實境裝置後，視覺會被它帶引着，除了仿如置身海底、森林或是太空，還會在視覺及聽覺方面得到強烈的刺激。",
+      "教育方面，老師可以運用虛擬實境技術輔助教學。在香港，地理課每週只有兩節課，不可能常常做實地考察。有的學校開設了虛擬實境地理教室，身處校園的學生戴上學習眼鏡後，立即進入佔地六十一公頃的虛擬香港濕地公園，參觀一萬平方呎的室內展館，觀察地貌，「親身」感受，使學習過程更有趣、更有效。",
+      "醫學方面，虛擬實境技術主要應用在培護人員和醫治病人上。通過虛擬實境，護士能從多角度觀察人體器官，了解人體運作。實習醫生看着虛擬實境眼鏡裏投射出來的病人，練習做手術。另外，有些醫生讓畏高症病患者置身於虛擬的高樓大廈上，從「上」往「下」望，幫助患者在安全的環境下克服畏高症。",
+      "總括而言，虛擬實境能廣泛地應用在不同領域。我們應該多了解日新月異的科技發展，繼而把科技的用途進一步發揮，貢獻社會，這將是世界公民之福。"
     ];
 
     const vocabList = [
@@ -125,12 +186,13 @@
          .replace(/[，。、．。？！；：「」『』（）()‧,.;:!?]/g, "")
          .toLowerCase();
 
+    const preferredVoices = ["yue-Hant-HK","zh-HK","zh-TW","zh-CN"];
+    const pickVoice = () => speechSynthesis.getVoices().find(v => preferredVoices.includes(v.lang)) || null;
+
     const speak = (text, rate=1) => {
-      if (!('speechSynthesis' in window)) return;
+      if (!('speechSynthesis' in window) || !text) return;
       const utter = new SpeechSynthesisUtterance(text);
-      // Try Cantonese first, fallback to zh-HK / zh-TW / zh-CN
-      const preferred = ["yue-Hant-HK","zh-HK","zh-TW","zh-CN"];
-      const voice = speechSynthesis.getVoices().find(v => preferred.includes(v.lang));
+      const voice = pickVoice();
       if (voice) utter.voice = voice;
       utter.lang = voice ? voice.lang : "zh-HK";
       utter.rate = rate;
@@ -139,62 +201,54 @@
 
     const splitHalf = (sentence) => {
       const idx = sentence.indexOf("，");
-      if (idx > -1) {
+      if (idx > -1 && idx < sentence.length - 1) {
         return [sentence.slice(0, idx+1), sentence.slice(idx+1)];
       }
-      // no comma: split near middle by characters
       const mid = Math.max(1, Math.floor(sentence.length/2));
       return [sentence.slice(0, mid), sentence.slice(mid)];
     };
 
-    // --- Build UI for paragraphs ---
+    // --- Build UI for lines ---
     const paraContainer = document.getElementById("paraContainer");
-    paragraphs.forEach((para, i) => {
+    lines.forEach((line, i) => {
       const block = document.createElement("div");
-      block.className = "bg-white rounded border border-slate-200 p-3";
+      block.className = "bg-slate-100 rounded border border-slate-200 p-3";
       block.innerHTML = `
-        <div class="flex items-center justify-between mb-2">
-          <div class="text-sm font-semibold text-slate-700">第 ${i+1} 段</div>
-          <button data-tts-para="${i}" class="text-emerald-700 text-sm hover:underline">🔊 半句朗讀</button>
+        <div class="flex items-center justify-between mb-2 gap-2">
+          <div class="text-sm font-semibold text-slate-700">第 ${i+1} 行</div>
+          <div class="flex items-center gap-3 text-sm">
+            <button data-tts-line="${i}" class="text-emerald-700 hover:underline">🔊 半句朗讀</button>
+            <button data-show-line="${i}" class="text-amber-600 hover:underline">👀 顯示答案</button>
+          </div>
         </div>
-        <textarea rows="4" data-ref="para-${i}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="請默寫本段"></textarea>
-        <div class="text-sm text-emerald-700 mt-2 hidden answer-line">${para}</div>
+        <textarea rows="2" data-ref="line-${i}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="請默寫此行"></textarea>
+        <div class="text-sm text-emerald-700 mt-2 hidden answer-line">${line}</div>
       `;
       paraContainer.appendChild(block);
     });
 
-    // --- Paragraph half-sentence play buttons ---
+    // --- Half-sentence play and per-line show ---
     paraContainer.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-tts-para]");
-      if (!btn) return;
-      const idx = Number(btn.getAttribute("data-tts-para"));
-      const paraText = paragraphs[idx];
-      const rate = Number(document.querySelector('input[name="rate"]:checked').value || 1);
-      speechSynthesis.cancel();
-      // Split paragraph into sentences by 。！？？
-      const parts = paraText.split(/(?<=[。？！])/);
-      let queue = [];
-      parts.forEach(p => {
-        const trimmed = p.trim();
-        if (!trimmed) return;
-        const halves = splitHalf(trimmed);
-        queue.push(...halves);
-      });
-      // speak in sequence
-      queue.forEach((seg, k) => {
-        const u = new SpeechSynthesisUtterance(seg);
-        const preferred = ["yue-Hant-HK","zh-HK","zh-TW","zh-CN"];
-        const voice = speechSynthesis.getVoices().find(v => preferred.includes(v.lang));
-        if (voice) u.voice = voice;
-        u.lang = voice ? voice.lang : "zh-HK";
-        u.rate = rate;
-        u.pitch = 1;
-        u.volume = 1;
-        speechSynthesis.speak(u);
-      });
+      const ttsBtn = e.target.closest("[data-tts-line]");
+      if (ttsBtn) {
+        const idx = Number(ttsBtn.getAttribute("data-tts-line"));
+        const lineText = lines[idx];
+        const rate = Number(document.querySelector('input[name="rate"]:checked').value || 1);
+        speechSynthesis.cancel();
+        const halves = splitHalf(lineText.trim()).filter(Boolean);
+        halves.forEach(seg => speak(seg, rate));
+        return;
+      }
+      const showBtn = e.target.closest("[data-show-line]");
+      if (showBtn) {
+        const idx = Number(showBtn.getAttribute("data-show-line"));
+        const ansEl = paraContainer.querySelectorAll(".answer-line")[idx];
+        if (ansEl) ansEl.classList.toggle("hidden");
+        return;
+      }
     });
 
-    // --- Control buttons ---
+    // --- Controls ---
     document.getElementById("btnStop").onclick = () => {
       speechSynthesis.cancel();
     };
@@ -203,7 +257,7 @@
       speechSynthesis.cancel();
       const rate = Number(document.querySelector('input[name="rate"]:checked').value || 1);
       sentencesForTTS.forEach(sent => {
-        const halves = splitHalf(sent.trim());
+        const halves = splitHalf(sent.trim()).filter(Boolean);
         halves.forEach(seg => speak(seg, rate));
       });
     };
@@ -226,29 +280,19 @@
 
     document.getElementById("btnGrade").onclick = () => {
       let total = 0, correct = 0;
-      // title
-      const titleField = document.querySelector('textarea[data-ref="title"]');
-      total++;
-      if (normalize(titleField.value) === normalize("第四課｜虛擬實境的應用") ||
-          normalize(titleField.value) === normalize("第四課 虛擬實境的應用") ) {
-        correct++; titleField.classList.add("correct"); titleField.classList.remove("wrong");
-      } else { titleField.classList.add("wrong"); titleField.classList.remove("correct"); }
-
-      // paragraphs
-      paragraphs.forEach((para, i) => {
-        const field = document.querySelector(`textarea[data-ref="para-${i}"]`);
+      lines.forEach((line, i) => {
+        const field = document.querySelector(`textarea[data-ref="line-${i}"]`);
         total++;
-        if (normalize(field.value) === normalize(para)) {
+        if (normalize(field.value) === normalize(line)) {
           correct++; field.classList.add("correct"); field.classList.remove("wrong");
         } else {
           field.classList.add("wrong"); field.classList.remove("correct");
         }
       });
-
-      document.getElementById("statusText").textContent = `已批改：${correct} / ${total} 段（含標題）。`;
+      document.getElementById("statusText").textContent = `已批改：${correct} / ${total} 行。`;
     };
 
-    // --- Vocab section ---
+    // --- Vocab section (unchanged logic) ---
     const vocabContainer = document.getElementById("vocabContainer");
 
     const renderVocab = (list) => {
@@ -316,12 +360,11 @@
     };
 
     function alertStatus(msg){
-      // custom lightweight toast
       let bar = document.getElementById("toast");
       if (!bar){
         bar = document.createElement("div");
         bar.id = "toast";
-        bar.className = "fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-slate-900 text-white text-sm shadow";
+        bar.className = "fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-slate-900 text-white text-sm shadow transition-opacity duration-300";
         document.body.appendChild(bar);
       }
       bar.textContent = msg;
@@ -329,8 +372,13 @@
       setTimeout(()=>{ bar.style.opacity = "0"; }, 1800);
     }
 
-    // Warm up voices (some browsers need async)
-    window.speechSynthesis?.getVoices();
+    // Warm up voices
+    if (window.speechSynthesis) {
+      speechSynthesis.getVoices();
+      if (typeof speechSynthesis.onvoiceschanged !== "undefined") {
+        speechSynthesis.onvoiceschanged = () => {};
+      }
+    }
   </script>
 </body>
 </html>
