@@ -104,6 +104,22 @@
       <div id="idiomContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       <p id="statusIdiom" class="text-sm text-slate-600">尚未批改。</p>
     </section>
+
+    <!-- Part 4: 成語配對 -->
+    <section class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h2 class="text-xl font-semibold text-slate-900">第 4 部份：成語配對（可隨機排列）</h2>
+        <div class="flex items-center gap-2 text-sm">
+          <button id="btnShuffleMatch" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">🔀 重排</button>
+          <button id="btnGradeMatch" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ 批改配對</button>
+          <button id="btnShowMatch" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 顯示答案</button>
+          <button id="btnResetMatch" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ 重設</button>
+        </div>
+      </div>
+      <p class="text-xs text-amber-600">左欄為成語的意思／情境，右欄下拉選擇正確的成語。</p>
+      <div id="matchContainer" class="space-y-3"></div>
+      <p id="statusMatch" class="text-sm text-slate-600">尚未批改。</p>
+    </section>
   </div>
 
   <script>
@@ -176,7 +192,7 @@
       "繼而把科技的用途",
       "進一步發揮，",
       "貢獻社會，",
-      "這將是世界公民之福."
+      "這將是世界公民之福。"
     ];
     const lines = linesRaw.filter(l => l.trim().length > 0);
 
@@ -200,6 +216,16 @@
     const idiomList = [
       "鵬程萬里","平步青雲","舉案齊眉","百尺竿頭",
       "立竿見影","金榜題名","東山再起"
+    ];
+
+    const idiomPairs = [
+      { idiom: "鵬程萬里", hint: "前途遠大，發展無限" },
+      { idiom: "平步青雲", hint: "仕途／事業順利，一步登天地升遷" },
+      { idiom: "舉案齊眉", hint: "夫妻相敬如賓，彼此尊重" },
+      { idiom: "百尺竿頭", hint: "已達高成就，仍再求進步" },
+      { idiom: "立竿見影", hint: "效果立刻可見，馬上見效" },
+      { idiom: "金榜題名", hint: "考試中選／高中，名列榜上" },
+      { idiom: "東山再起", hint: "失敗或隱退後再度復出成功" }
     ];
 
     // --- Helpers ---
@@ -455,6 +481,74 @@
       });
       document.getElementById("statusIdiom").textContent = `已批改：${correct} / ${total}。`;
       alertStatus(`成語批改：${correct} / ${total}`);
+    };
+
+    // --- Matching section (Part 4) ---
+    const matchContainer = document.getElementById("matchContainer");
+
+    const renderMatches = (pairs, options) => {
+      matchContainer.innerHTML = "";
+      pairs.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-slate-200 rounded p-3 bg-slate-50";
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1">
+              <div class="text-sm font-semibold text-slate-700 mb-1">#${idx+1} 意思／情境</div>
+              <p class="text-sm text-slate-800 leading-relaxed">${item.hint}</p>
+              <div class="text-sm text-emerald-700 mt-2 hidden match-ans">答案：${item.idiom}</div>
+            </div>
+            <div class="w-40 shrink-0">
+              <label class="text-xs text-slate-500">選擇成語：</label>
+              <select data-match="${item.idiom}" class="mt-1 w-full rounded border border-slate-300 px-2 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200 bg-white">
+                <option value="">請選擇</option>
+                ${options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+        `;
+        matchContainer.appendChild(card);
+      });
+    };
+
+    const shuffleMatches = () => {
+      const shuffledPairs = shuffle(idiomPairs);
+      const shuffledOptions = shuffle(idiomPairs.map(p => p.idiom));
+      renderMatches(shuffledPairs, shuffledOptions);
+    };
+
+    shuffleMatches();
+
+    document.getElementById("btnShuffleMatch").onclick = () => {
+      shuffleMatches();
+      document.getElementById("statusMatch").textContent = "尚未批改。";
+    };
+
+    document.getElementById("btnShowMatch").onclick = () => {
+      document.querySelectorAll(".match-ans").forEach(el => el.classList.toggle("hidden"));
+    };
+
+    document.getElementById("btnResetMatch").onclick = () => {
+      document.querySelectorAll('#matchContainer select').forEach(sel => {
+        sel.value = "";
+        sel.classList.remove("correct","wrong");
+      });
+      document.getElementById("statusMatch").textContent = "尚未批改。";
+    };
+
+    document.getElementById("btnGradeMatch").onclick = () => {
+      let total = 0, correct = 0;
+      document.querySelectorAll('#matchContainer select').forEach(sel => {
+        total++;
+        const ans = sel.getAttribute("data-match");
+        if (sel.value === ans) {
+          correct++; sel.classList.add("correct"); sel.classList.remove("wrong");
+        } else {
+          sel.classList.add("wrong"); sel.classList.remove("correct");
+        }
+      });
+      document.getElementById("statusMatch").textContent = `已批改：${correct} / ${total}。`;
+      alertStatus(`成語配對：${correct} / ${total}`);
     };
 
     // Warm up voices
