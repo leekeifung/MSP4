@@ -86,6 +86,23 @@
       </div>
       <p class="text-xs text-amber-600">點擊 🔊 以廣東話讀出字詞；若未出聲，請點擊頁面以啟用語音。</p>
       <div id="vocabContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <p id="statusVocab" class="text-sm text-slate-600">尚未批改。</p>
+    </section>
+
+    <!-- Part 3: 成語點讀 -->
+    <section class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h2 class="text-xl font-semibold text-slate-900">第 3 部份：成語點讀（可隨機排列）</h2>
+        <div class="flex items-center gap-2 text-sm">
+          <button id="btnShuffleIdiom" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">🔀 重排</button>
+          <button id="btnGradeIdiom" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ 批改成語</button>
+          <button id="btnShowIdiom" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 顯示答案</button>
+          <button id="btnResetIdiom" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ 重設</button>
+        </div>
+      </div>
+      <p class="text-xs text-amber-600">點擊 🔊 以廣東話讀出成語；若未出聲，請點擊頁面以啟用語音。</p>
+      <div id="idiomContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <p id="statusIdiom" class="text-sm text-slate-600">尚未批改。</p>
     </section>
   </div>
 
@@ -159,7 +176,7 @@
       "繼而把科技的用途",
       "進一步發揮，",
       "貢獻社會，",
-      "這將是世界公民之福。"
+      "這將是世界公民之福."
     ];
     const lines = linesRaw.filter(l => l.trim().length > 0);
 
@@ -178,6 +195,11 @@
       "虛擬","建構","虛構","範疇","技術","質量",
       "娛樂","仿如","刺激","輔助","考察","有效",
       "培訓","解","廣泛","領域","日新月異","發揮"
+    ];
+
+    const idiomList = [
+      "鵬程萬里","平步青雲","舉案齊眉","百尺竿頭",
+      "立竿見影","金榜題名","東山再起"
     ];
 
     // --- Helpers ---
@@ -207,6 +229,20 @@
       const mid = Math.max(1, Math.floor(sentence.length/2));
       return [sentence.slice(0, mid), sentence.slice(mid)];
     };
+
+    // Toast
+    function alertStatus(msg){
+      let bar = document.getElementById("toast");
+      if (!bar){
+        bar = document.createElement("div");
+        bar.id = "toast";
+        bar.className = "fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-slate-900 text-white text-sm shadow transition-opacity duration-300";
+        document.body.appendChild(bar);
+      }
+      bar.textContent = msg;
+      bar.style.opacity = "1";
+      setTimeout(()=>{ bar.style.opacity = "0"; }, 1800);
+    }
 
     // --- Build UI for lines ---
     const paraContainer = document.getElementById("paraContainer");
@@ -292,7 +328,7 @@
       document.getElementById("statusText").textContent = `已批改：${correct} / ${total} 行。`;
     };
 
-    // --- Vocab section (unchanged logic) ---
+    // --- Vocab section (Part 2) ---
     const vocabContainer = document.getElementById("vocabContainer");
 
     const renderVocab = (list) => {
@@ -343,6 +379,7 @@
         inp.value = "";
         inp.classList.remove("correct","wrong");
       });
+      document.getElementById("statusVocab").textContent = "尚未批改。";
     };
 
     document.getElementById("btnGradeVocab").onclick = () => {
@@ -356,21 +393,69 @@
           inp.classList.add("wrong"); inp.classList.remove("correct");
         }
       });
+      document.getElementById("statusVocab").textContent = `已批改：${correct} / ${total}。`;
       alertStatus(`字詞批改：${correct} / ${total}`);
     };
 
-    function alertStatus(msg){
-      let bar = document.getElementById("toast");
-      if (!bar){
-        bar = document.createElement("div");
-        bar.id = "toast";
-        bar.className = "fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded bg-slate-900 text-white text-sm shadow transition-opacity duration-300";
-        document.body.appendChild(bar);
-      }
-      bar.textContent = msg;
-      bar.style.opacity = "1";
-      setTimeout(()=>{ bar.style.opacity = "0"; }, 1800);
-    }
+    // --- Idiom section (Part 3) ---
+    const idiomContainer = document.getElementById("idiomContainer");
+
+    const renderIdioms = (list) => {
+      idiomContainer.innerHTML = "";
+      list.forEach((word, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-slate-200 rounded p-3 bg-slate-50";
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm font-semibold text-slate-700">#${idx+1}</div>
+            <button class="text-emerald-700 text-sm hover:underline" data-say-idiom="${word}">🔊</button>
+          </div>
+          <input data-idiom="${word}" type="text" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="請輸入成語">
+          <div class="text-sm text-emerald-700 mt-1 hidden idiom-ans">${word}</div>
+        `;
+        idiomContainer.appendChild(card);
+      });
+    };
+
+    renderIdioms(shuffle(idiomList));
+
+    idiomContainer.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-say-idiom]");
+      if (!btn) return;
+      const word = btn.getAttribute("data-say-idiom");
+      speak(word, 1);
+    });
+
+    document.getElementById("btnShuffleIdiom").onclick = () => {
+      renderIdioms(shuffle(idiomList));
+    };
+
+    document.getElementById("btnShowIdiom").onclick = () => {
+      document.querySelectorAll(".idiom-ans").forEach(el => el.classList.toggle("hidden"));
+    };
+
+    document.getElementById("btnResetIdiom").onclick = () => {
+      document.querySelectorAll('#idiomContainer input').forEach(inp => {
+        inp.value = "";
+        inp.classList.remove("correct","wrong");
+      });
+      document.getElementById("statusIdiom").textContent = "尚未批改。";
+    };
+
+    document.getElementById("btnGradeIdiom").onclick = () => {
+      let total = 0, correct = 0;
+      document.querySelectorAll('#idiomContainer input').forEach(inp => {
+        total++;
+        const ans = inp.getAttribute("data-idiom");
+        if (normalize(inp.value) === normalize(ans)) {
+          correct++; inp.classList.add("correct"); inp.classList.remove("wrong");
+        } else {
+          inp.classList.add("wrong"); inp.classList.remove("correct");
+        }
+      });
+      document.getElementById("statusIdiom").textContent = `已批改：${correct} / ${total}。`;
+      alertStatus(`成語批改：${correct} / ${total}`);
+    };
 
     // Warm up voices
     if (window.speechSynthesis) {
