@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MSP4 English Dictation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .correct { border-color: #16a34a !important; background-color: #ecfdf3; }
+    .wrong { border-color: #dc2626 !important; background-color: #fef2f2; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold">MSP4 English Dictation</h1>
+      <p class="text-sm text-slate-600">Speed controls apply to all audio. If audio does not play, click once on the page or reload.</p>
+      <div class="flex flex-wrap items-center gap-3 text-sm">
+        <span class="font-semibold text-slate-700">Speed:</span>
+        <div class="flex flex-wrap gap-2">
+          <!-- Speed options -->
+          <label class="inline-flex items-center gap-1 cursor-pointer"><input type="radio" name="rate" value="0.2" class="accent-emerald-600" />0.2×</label>
+          <label class="inline-flex items-center gap-1 cursor-pointer"><input type="radio" name="rate" value="0.3" class="accent-emerald-600" />0.3×</label>
+          <label class="inline-flex items-center gap-1 cursor-pointer"><input type="radio" name="rate" value="0.5" class="accent-emerald-600" />0.5×</label>
+          <label class="inline-flex items-center gap-1 cursor-pointer"><input type="radio" name="rate" value="0.7" class="accent-emerald-600" />0.7×</label>
+          <label class="inline-flex items-center gap-1 cursor-pointer"><input type="radio" name="rate" value="0.9" class="accent-emerald-600" />0.9×</label>
+          <label class="inline-flex items-center gap-1 cursor-pointer"><input type="radio" name="rate" value="1" class="accent-emerald-600" checked />1.0×</label>
+        </div>
+      </div>
+    </header>
+
+    <!-- Part 1 -->
+    <section class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="text-xl font-semibold">Part 1: Verb Table (7) LOE 4B P.92 (study - try)</h2>
+          <p class="text-sm text-slate-600">Hidden Base Form — Listen & Type (Randomized). Listen to the base form and type it, plus the present continuous and past tense.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button id="p1-reshuffle" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">🔀 Reshuffle</button>
+          <button id="p1-check" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ Check all</button>
+          <button id="p1-show" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 Show all answers</button>
+          <button id="p1-reset" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ Reset</button>
+        </div>
+      </div>
+      <p id="p1-status" class="text-sm text-slate-600">Ready.</p>
+      <div id="p1-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- Part 2 -->
+    <section class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="text-xl font-semibold">Part 2: LOE 4B Unit 2 P.14 (Line 3-21)</h2>
+          <p class="text-sm text-slate-600">Listen to each line and type it. You can also play the whole passage.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button id="p2-playall" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">▶ Play whole passage</button>
+          <button id="p2-check" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ Check all</button>
+          <button id="p2-show" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 Show all answers</button>
+          <button id="p2-reset" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ Reset</button>
+        </div>
+      </div>
+      <p id="p2-status" class="text-sm text-slate-600">Ready.</p>
+      <div id="p2-container" class="space-y-3"></div>
+    </section>
+
+    <!-- Part 3 -->
+    <section class="bg-white rounded-lg shadow p-4 space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="text-xl font-semibold">Part 3: Body Movement P.46 (#15-19) — Unseen Dictation</h2>
+          <p class="text-sm text-slate-600">Listen and write the sentence. Uses the verbs: drink, sip, slurp, gulp, chug.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button id="p3-reshuffle" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">🔀 Reshuffle</button>
+          <button id="p3-playall" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">▶ Play all</button>
+          <button id="p3-check" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">✅ Check all</button>
+          <button id="p3-show" class="px-3 py-1.5 rounded bg-amber-500 text-white hover:bg-amber-600">👀 Show all answers</button>
+          <button id="p3-reset" class="px-3 py-1.5 rounded bg-slate-200 text-slate-800 hover:bg-slate-300">♻️ Reset</button>
+        </div>
+      </div>
+      <p id="p3-status" class="text-sm text-slate-600">Ready.</p>
+      <div id="p3-container" class="space-y-3"></div>
+    </section>
+  </div>
+
+  <script>
+    // Utility: pick English voice
+    const preferredVoices = ["en-US","en-GB","en-CA","en-AU","en-IN","en"];
+    function pickEnglishVoice() {
+      const voices = speechSynthesis.getVoices();
+      return voices.find(v => preferredVoices.includes(v.lang)) ||
+             voices.find(v => v.lang.startsWith("en")) || null;
+    }
+    function getRate() {
+      const r = document.querySelector('input[name="rate"]:checked');
+      return r ? Number(r.value) : 1;
+    }
+    function speak(text) {
+      if (!("speechSynthesis" in window) || !text) return;
+      const u = new SpeechSynthesisUtterance(text);
+      const v = pickEnglishVoice();
+      if (v) u.voice = v;
+      u.lang = v ? v.lang : "en-US";
+      u.rate = getRate();
+      speechSynthesis.speak(u);
+    }
+    function normalize(str) {
+      return str
+        .toLowerCase()
+        .replace(/['".,!?;:()\-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+    function toast(msg) {
+      let el = document.getElementById("toast");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "toast";
+        el.className = "fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded shadow text-sm transition-opacity";
+        document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.style.opacity = "1";
+      setTimeout(() => { el.style.opacity = "0"; }, 1800);
+    }
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i=a.length-1;i>0;i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    /* Part 1 data */
+    const verbs = [
+      { base: "study", third: "studies", cont: "studying", past: "studied" },
+      { base: "swim", third: "swims", cont: "swimming", past: "swam" },
+      { base: "take", third: "takes", cont: "taking", past: "took" },
+      { base: "teach", third: "teaches", cont: "teaching", past: "taught" },
+      { base: "tell", third: "tells", cont: "telling", past: "told" },
+      { base: "think", third: "thinks", cont: "thinking", past: "thought" },
+      { base: "throw", third: "throws", cont: "throwing", past: "threw" },
+      { base: "tidy", third: "tidies", cont: "tidying", past: "tidied" },
+      { base: "touch", third: "touches", cont: "touching", past: "touched" },
+      { base: "try", third: "tries", cont: "trying", past: "tried" }
+    ];
+
+    const p1Container = document.getElementById("p1-container");
+    function renderP1() {
+      const list = shuffle(verbs);
+      p1Container.innerHTML = "";
+      list.forEach((v, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-slate-200 rounded p-3 bg-slate-50";
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="space-y-1">
+              <div class="text-sm font-semibold text-slate-800">#${idx+1} Base hidden — listen & type</div>
+              <div class="text-xs text-slate-600">Hint: 3rd person singular — <span class="font-medium text-slate-700">${v.third}</span></div>
+            </div>
+            <button class="text-emerald-700 text-sm hover:underline" data-play-base="${v.base}">🔊 Play base</button>
+          </div>
+          <div class="mt-3 space-y-2">
+            <input data-base="${v.base}" type="text" placeholder="Base form" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" />
+            <input data-cont="${v.cont}" type="text" placeholder="Present continuous" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" />
+            <input data-past="${v.past}" type="text" placeholder="Past tense" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" />
+            <div class="text-xs text-emerald-700 hidden answers">
+              Base: ${v.base} | Pres. cont.: ${v.cont} | Past: ${v.past}
+            </div>
+          </div>
+        `;
+        p1Container.appendChild(card);
+      });
+    }
+    renderP1();
+
+    p1Container.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-play-base]");
+      if (!btn) return;
+      speak(btn.getAttribute("data-play-base"));
+    });
+
+    document.getElementById("p1-reshuffle").onclick = () => {
+      renderP1();
+      document.getElementById("p1-status").textContent = "Reshuffled.";
+    };
+    document.getElementById("p1-show").onclick = () => {
+      p1Container.querySelectorAll(".answers").forEach(el => el.classList.toggle("hidden"));
+    };
+    document.getElementById("p1-reset").onclick = () => {
+      p1Container.querySelectorAll("input").forEach(inp => { inp.value=""; inp.classList.remove("correct","wrong"); });
+      document.getElementById("p1-status").textContent = "Reset.";
+    };
+    document.getElementById("p1-check").onclick = () => {
+      let total=0, ok=0;
+      p1Container.querySelectorAll("input[data-base]").forEach(inp => {
+        total++;
+        const ans = inp.getAttribute("data-base");
+        if (normalize(inp.value) === normalize(ans)) { ok++; inp.classList.add("correct"); inp.classList.remove("wrong"); }
+        else { inp.classList.add("wrong"); inp.classList.remove("correct"); }
+      });
+      p1Container.querySelectorAll("input[data-cont]").forEach(inp => {
+        total++;
+        const ans = inp.getAttribute("data-cont");
+        if (normalize(inp.value) === normalize(ans)) { ok++; inp.classList.add("correct"); inp.classList.remove("wrong"); }
+        else { inp.classList.add("wrong"); inp.classList.remove("correct"); }
+      });
+      p1Container.querySelectorAll("input[data-past]").forEach(inp => {
+        total++;
+        const ans = inp.getAttribute("data-past");
+        if (normalize(inp.value) === normalize(ans)) { ok++; inp.classList.add("correct"); inp.classList.remove("wrong"); }
+        else { inp.classList.add("wrong"); inp.classList.remove("correct"); }
+      });
+      const msg = `Checked: ${ok} / ${total}`;
+      document.getElementById("p1-status").textContent = msg;
+      toast(msg);
+    };
+
+    /* Part 2 data */
+    const p2Lines = [
+      "A lot of children",
+      "in Hong Kong",
+      "eat too many snacks,",
+      "take in too much",
+      "salt and sugar,",
+      "and do not eat",
+      "enough fruit and vegetables.",
+      "In a study",
+      "on eating habits,",
+      "nearly one-third of",
+      "Hong Kong children",
+      "chose meat as their",
+      "favourite food and",
+      "more than one-quarter",
+      "chose vegetables",
+      "as their most",
+      "disliked food.",
+      "Nearly one-quarter",
+      "of the children seldom",
+      "or never had vegetables",
+      "for lunch.",
+      "Another study showed that",
+      "nearly half of the children",
+      "in Hong Kong",
+      "did not eat enough fruit.",
+      "Although most children",
+      "in Hong Kong",
+      "know what food",
+      "is healthy for them,",
+      "they still prefer",
+      "fatty, salty and sugary food.",
+      "If children want",
+      "to be healthy and happy,",
+      "they should have",
+      "a balanced diet.",
+      "Remember,",
+      "we are what we eat."
+    ];
+    const p2Container = document.getElementById("p2-container");
+    function renderP2() {
+      p2Container.innerHTML = "";
+      p2Lines.forEach((line, idx) => {
+        const block = document.createElement("div");
+        block.className = "border border-slate-200 rounded p-3 bg-slate-50";
+        block.innerHTML = `
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="text-sm font-semibold text-slate-800">Line ${idx+3}</div>
+            <div class="flex items-center gap-3 text-sm">
+              <button class="text-emerald-700 hover:underline" data-p2-play="${idx}">🔊 Play</button>
+              <button class="text-amber-600 hover:underline" data-p2-show="${idx}">👀 Show</button>
+            </div>
+          </div>
+          <textarea rows="2" data-p2-input="${idx}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="Type the line here"></textarea>
+          <div class="text-sm text-emerald-700 mt-2 hidden" data-p2-ans="${idx}">${line}</div>
+        `;
+        p2Container.appendChild(block);
+      });
+    }
+    renderP2();
+
+    p2Container.addEventListener("click", (e) => {
+      const playBtn = e.target.closest("[data-p2-play]");
+      const showBtn = e.target.closest("[data-p2-show]");
+      if (playBtn) {
+        const idx = Number(playBtn.getAttribute("data-p2-play"));
+        speak(p2Lines[idx]);
+      }
+      if (showBtn) {
+        const idx = Number(showBtn.getAttribute("data-p2-show"));
+        const ans = p2Container.querySelector(`[data-p2-ans="${idx}"]`);
+        ans.classList.toggle("hidden");
+      }
+    });
+
+    document.getElementById("p2-playall").onclick = () => {
+      p2Lines.forEach(line => speak(line));
+    };
+    document.getElementById("p2-show").onclick = () => {
+      p2Container.querySelectorAll("[data-p2-ans]").forEach(el => el.classList.toggle("hidden"));
+    };
+    document.getElementById("p2-reset").onclick = () => {
+      p2Container.querySelectorAll("textarea").forEach(t => { t.value=""; t.classList.remove("correct","wrong"); });
+      document.getElementById("p2-status").textContent = "Reset.";
+    };
+    document.getElementById("p2-check").onclick = () => {
+      let total=0, ok=0;
+      p2Container.querySelectorAll("textarea").forEach((t, idx) => {
+        total++;
+        const ans = p2Lines[idx];
+        if (normalize(t.value) === normalize(ans)) { ok++; t.classList.add("correct"); t.classList.remove("wrong"); }
+        else { t.classList.add("wrong"); t.classList.remove("correct"); }
+      });
+      const msg = `Checked: ${ok} / ${total}`;
+      document.getElementById("p2-status").textContent = msg;
+      toast(msg);
+    };
+
+    /* Part 3 data */
+    const p3Sentences = [
+      "I drink a glass of water after my run.",
+      "She drinks warm milk before bed every night.",
+      "They drink lemonade on hot summer days.",
+      "He sipped his tea slowly to enjoy the flavor.",
+      "We sipped cocoa while watching the rain.",
+      "The baby sips juice from a small cup.",
+      "Please don't slurp your soup at the table.",
+      "Tom slurped his noodles noisily in a hurry.",
+      "I could hear her slurp the milkshake through the straw.",
+      "He gulped down his water after the race.",
+      "They gulped their sandwiches because they were late.",
+      "She took a deep breath and gulped her medicine.",
+      "Uncle Ben chugged his soda during the contest.",
+      "The players chugged bottles of sports drink after the game.",
+      "He tried to chug the smoothie but had to stop halfway."
+    ];
+    let p3Order = shuffle(p3Sentences);
+    const p3Container = document.getElementById("p3-container");
+
+    function renderP3() {
+      p3Container.innerHTML = "";
+      p3Order.forEach((line, idx) => {
+        const block = document.createElement("div");
+        block.className = "border border-slate-200 rounded p-3 bg-slate-50";
+        block.innerHTML = `
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="text-sm font-semibold text-slate-800">Sentence ${idx+1}</div>
+            <div class="flex items-center gap-3 text-sm">
+              <button class="text-emerald-700 hover:underline" data-p3-play="${idx}">🔊 Play</button>
+              <button class="text-amber-600 hover:underline" data-p3-show="${idx}">👀 Show</button>
+            </div>
+          </div>
+          <textarea rows="2" data-p3-input="${idx}" class="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200" placeholder="Write the sentence"></textarea>
+          <div class="text-sm text-emerald-700 mt-2 hidden" data-p3-ans="${idx}">${line}</div>
+        `;
+        p3Container.appendChild(block);
+      });
+    }
+    renderP3();
+
+    p3Container.addEventListener("click", (e) => {
+      const playBtn = e.target.closest("[data-p3-play]");
+      const showBtn = e.target.closest("[data-p3-show]");
+      if (playBtn) {
+        const idx = Number(playBtn.getAttribute("data-p3-play"));
+        speak(p3Order[idx]);
+      }
+      if (showBtn) {
+        const idx = Number(showBtn.getAttribute("data-p3-show"));
+        const ans = p3Container.querySelector(`[data-p3-ans="${idx}"]`);
+        ans.classList.toggle("hidden");
+      }
+    });
+
+    document.getElementById("p3-reshuffle").onclick = () => {
+      p3Order = shuffle(p3Sentences);
+      renderP3();
+      document.getElementById("p3-status").textContent = "Reshuffled.";
+    };
+    document.getElementById("p3-playall").onclick = () => {
+      p3Order.forEach(line => speak(line));
+    };
+    document.getElementById("p3-show").onclick = () => {
+      p3Container.querySelectorAll("[data-p3-ans]").forEach(el => el.classList.toggle("hidden"));
+    };
+    document.getElementById("p3-reset").onclick = () => {
+      p3Container.querySelectorAll("textarea").forEach(t => { t.value=""; t.classList.remove("correct","wrong"); });
+      document.getElementById("p3-status").textContent = "Reset.";
+    };
+    document.getElementById("p3-check").onclick = () => {
+      let total=0, ok=0;
+      p3Container.querySelectorAll("textarea").forEach((t, idx) => {
+        total++;
+        const ans = p3Order[idx];
+        if (normalize(t.value) === normalize(ans)) { ok++; t.classList.add("correct"); t.classList.remove("wrong"); }
+        else { t.classList.add("wrong"); t.classList.remove("correct"); }
+      });
+      const msg = `Checked: ${ok} / ${total}`;
+      document.getElementById("p3-status").textContent = msg;
+      toast(msg);
+    };
+
+    // Warm up voices
+    if (window.speechSynthesis) {
+      speechSynthesis.getVoices();
+      speechSynthesis.onvoiceschanged = () => {};
+    }
+  </script>
+</body>
+</html>
