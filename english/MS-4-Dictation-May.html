@@ -80,6 +80,14 @@
         </div>
       </div>
       <p id="p3-status" class="text-sm text-slate-600">Ready.</p>
+      
+      <!-- Keywords Section -->
+      <div class="bg-slate-100 rounded-lg p-4 mb-4 border border-slate-200">
+        <h3 class="text-lg font-semibold text-slate-800 mb-3">Keywords to Know</h3>
+        <div id="p3-keywords-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+      </div>
+
+      <!-- Sentences Section -->
       <div id="p3-container" class="space-y-3"></div>
     </section>
   </div>
@@ -305,6 +313,37 @@
     };
 
     /* Part 3 data */
+    const p3Keywords = [
+      "quickly", "swiftly", "speedily", "hurriedly",
+      "hastily", "busily", "briskly", "in a flash"
+    ];
+
+    const p3KeywordsContainer = document.getElementById("p3-keywords-container");
+    function renderP3Keywords() {
+      p3KeywordsContainer.innerHTML = "";
+      p3Keywords.forEach(kw => {
+        const card = document.createElement("div");
+        card.className = "bg-white border border-slate-200 rounded-lg p-3 flex flex-col items-center gap-2 text-center shadow-sm";
+        // Using picsum.photos for reliable placeholder images based on the word seed
+        const imgSeed = kw.replace(/\s/g, '');
+        const imgUrl = `https://picsum.photos/seed/${imgSeed}/200/200`;
+        
+        card.innerHTML = `
+          <img src="${imgUrl}" alt="${kw}" class="w-16 h-16 object-cover rounded-full shadow-sm border border-slate-100" />
+          <div class="font-semibold text-slate-800 capitalize text-sm">${kw}</div>
+          <button class="px-3 py-1 text-xs rounded bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors font-medium" data-play-kw="${kw}">🔊 Play</button>
+        `;
+        p3KeywordsContainer.appendChild(card);
+      });
+    }
+    renderP3Keywords();
+
+    p3KeywordsContainer.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-play-kw]");
+      if (!btn) return;
+      speak(btn.getAttribute("data-play-kw"));
+    });
+
     const p3Sentences = [
       "Jenny woke up late this morning and had to run quickly to the bus stop.",
       "The delivery rider weaved swiftly through the traffic to stay on time.",
