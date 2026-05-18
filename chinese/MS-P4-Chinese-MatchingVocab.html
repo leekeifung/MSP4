@@ -3,52 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>詞義理解練習 - 詞彙辨析</title>
+    <title>詞義理解練習 - 中文科電子教材</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --correct-color: #27ae60;
-            --wrong-color: #e74c3c;
+            --primary-color: #4a90e2;
+            --success-color: #4caf50;
+            --error-color: #f44336;
             --bg-color: #f4f7f6;
+            --text-color: #333;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft JhengHei';
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             background-color: var(--bg-color);
-            color: var(--primary-color);
-            line-height: 1.6;
+            color: var(--text-color);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
         }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
+        #quiz-container {
             background: white;
-            padding: 30px;
+            padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10    px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
         }
 
         h1 {
             text-align: center;
-            color: #2980b9;
-            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .question-card {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            transition: all 0.3s ease;
+        .progress {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
         }
 
-        .question-text {
+        .question {
             font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
 
         .options-grid {
@@ -57,100 +59,202 @@
             gap: 10px;
         }
 
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: 1fr; }
+        @media (max-width: 480px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .option-btn {
-            padding: 12px;
+            background: #fff;
             border: 2px solid #ddd;
-            background: white;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
-            text-align: left;
             font-size: 1rem;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            text-align: center;
         }
 
         .option-btn:hover {
-            background-color: #eef7ff;
-            border-color: #3498db;
+            border-color: var(--primary-color);
+            background-color: #f0f7ff;
         }
 
         .option-btn.correct {
-            background-color: var(--correct-color);
-            color: white;
-            border-color: var(--correct-color);
+            background-color: var(--success-control);
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
         }
 
         .option-btn.wrong {
-            background-color: var(--wrong-color);
-            color: white;
-            border-color: var(--wrong-color);
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
         }
 
-        .feedback {
-            margin-top: 10px;
-            font-weight: bold;
-            display: none;
-        }
-
-        #score-area {
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 10px;
-            width: 100%;
+        #result-area {
+            margin-top: 20px;
             text-align: center;
-            font-size: 1.5rem;
             font-weight: bold;
-            border-bottom: 2px solid #3498db;
-            margin-bottom: 20px;
-            z-index: 100;
+            min-height: 1.5em;
         }
 
-        button#reset-btn {
-            display: block;
-            margin: 30px auto;
+        .score-screen {
+            text-align: center;
+        }
+
+        .restart-btn {
+            margin-top: 20px;
             padding: 10px 25px;
-            font-size: 1rem;
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
         }
 
-        button#reset-btn:hover { background-color: #2980b9; }
+        .restart-btn:hover {
+            background-color: #357abd;
+        }
+
+        /* 隱藏動畫 */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div id="score-area">得分: <span id="current-score">0</span> / 20</div>
-
-<div class="container">
+<div id="quiz-container">
     <h1>詞義理解練習</h1>
-    <div id="quiz-container">
-        <!-- Questions will be injected here -->
+    
+    <!-- 答題介面 -->
+    <div id="question-screen">
+        <div class="progress" id="progress">題目 1 / 10</div>
+        <div class="question" id="question-text">載入中...</div>
+        <div class="options-grid" id="options-container">
+            <!-- 按鈕會由 JS 生成 -->
+        </div>
+        <div id="result-area"></div>
     </div>
-    <button id="reset-btn" onclick="initQuiz()">重新開始練習</button>
+
+    <!-- 結算介面 -->
+    <div id="score-screen" class="hidden">
+        <h2>練習結束！</h2>
+        <p style="font-size: 1.5rem;">您的得分：<span id="final-score">0</span> / 10</p>
+        <button class="restart-btn" onclick="resetQuiz()">重新挑戰</button>
+    </div>
 </div>
 
 <script>
     // 題目數據庫
-    // correct: 正確答案, distractors: 語意相關的干擾項
     const quizData = [
-        { q: "他決不會_______自己的信仰，即使面對重重困難。", correct: "妄棄", distractors: ["放棄", "遺忘", "拋棄"] },
-        { q: "看到失去親人的消息，他的內心感到萬分_______。", correct: "悲哀", distractors: ["難過", "憂鬱", "傷心"] },
-        { q: "母親對孩子那份無私的_______，是世界上最溫暖的力量。", correct: "至愛", distractors: ["最愛", "摯愛", "親愛"] },
-        { q: "當大自然的美景觸動心靈時，人與天地之間彷彿產生了一種_______。", correct: "感應", distractors: ["感觸", "響應", "感動"] },
-        { q: "這次成功的經驗，能幫助學生_______對學問的追求。", correct: "提升", distractors: ["提高", "進步", "升級"] },
-        { q: "科學家利用非常_______的儀器來進行這項實驗。", correct: "精密", distractors: ["精確", "細緻", "精良"] },
-        { q: "製作這件藝術品的手續非常_______，需要極大的耐心。", correct: "繁複", distractors: ["複雜", "繁瑣", "困難"] },
-        { q: "在物資匱乏的時期，我們必須學會_______用。<br> (注意：此題考查日常應用)", correct: "節省", distractors: ["儲蓄", "減省", "縮減"] },
-        { q: "對於老師多年來的悉心教導，學生心中充滿了_______。", correct: "感激", distractors: ["感動", "感謝", "感佩"] },
-        { q: "在災難發生時，社會各界紛紛伸出援手提供_______。", correct: "支援", distractors: ["幫助", "扶持", "支持"] },
-        { q: "這部機器需要人工的_______才能正常運作。", correct: "輔助", distractors: ["協助", "幫忙", "配合"] },
-        { q: "醫生建議他透過飲食_______，以維持身體健康。", correct: "調劑", distractors: ["調節", "調整", "調配"] },
-        { q: "現在我們生活在一個_______時代，科技改變了世界。", correct: "虛擬", distractors: ["假象", "模擬", "虛幻"] },
-        { q: "這項研究的_______非常廣泛，涵蓋了社會各個層面。", correct: "範疇", distractors: ["範圍", "界限", "部門"] },
+        { q: "他不應該__________原本擁有的幸福生活。", a: "妄棄", choices: ["妄棄", "放棄", "遺棄", "丟棄"] },
+        { q: "看到這幅畫，他心中湧起一股莫名的__________。", a: "悲哀", choices: ["悲哀", "傷痛", "憂愁", "難過"] },
+        { q: "對於這位藝術家來說，繪畫就是他的______。", a: "至愛", choices: ["至愛", "愛好", "喜愛", "珍愛"] },
+        { q: "當兩顆心靈產生______時，語言便不再重要。", a: "感應", choices: ["感應", "感動", "感覺", "感悟"] },
+        { q: "這項新技術能顯著__________生產效率。", a: "提升", choices: ["提升", "提高", "進步", "增強"] },
+        { q: "科學家正使用______的儀器進行實驗。", a: "精密", choices: ["精密", "精確", "細緻", "精良"] },
+        { q: "製作這件手工藝品的手續非常______。", a: "繁複", choices: ["繁複", "複雜", "繁瑣", "繁重"] },
+        { q: "我們應該養成______能源的好習慣。", a: "節省", choices: ["節省", "節制", "節約", "儲存"] },
+        { 				q: "我對老師的教導深表______。", a: "感激", choices: ["感激", "感動", "感恩", "感謝"] },
+        { q: "災區急需各界的物資______。", a: "支援", choices: ["支援", "支持", "援助", "幫助"] }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let canAnswer = true;
+
+    // 初始化/重置測驗
+    function resetQuiz() {
+        // 隨機打亂題目順序
+        currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+        currentIndex = 0;
+        score = 0;
+        
+        document.getElementById('score-screen').classList.add('hidden');
+        document.getElementById('question-screen').classList.remove('hidden');
+        document.getElementById('result-area').innerText = "";
+        
+        showQuestion();
+    }
+
+    // 顯示題目
+    function showQuestion() {
+        canAnswer = true;
+        const data = currentQuestions[currentIndex];
+        
+        // 更新進度
+        document.getElementById('progress').innerText = `題目 ${currentIndex + 1} / ${currentQuestions.length}`;
+        
+        // 更新題目文本
+        document.getElementById('question-text').innerText = data.q;
+        
+        // 準備選項並隨機化
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        
+        const shuffledChoices = [...data.choices].sort(() => Math.random() - 0.5);
+        
+        shuffledChoices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = choice;
+            btn.onclick = () => checkAnswer(choice, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // 檢查答案
+    function checkAnswer(selected, btn) {
+        if (!canAnswer) return;
+        canAnswer = false;
+
+        const correctAnswer = currentQuestions[currentIndex].a;
+        const resultArea = document.getElementById('result-area');
+
+        if (selected === correctAnswer) {
+            score++;
+            btn.classList.add('correct');
+            resultArea.style.color = 'var(--success-color)';
+            resultArea.innerText = "答對了！";
+        } else {
+            btn.classList.add('wrong');
+            resultArea.style.color = 'var(--error-color)';
+            resultArea.innerText = `可惜，正確答案是「${correctAnswer}」`;
+            
+            // 強制標示出正確的按鈕
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => {
+                if (b.innerText === correctAnswer) b.classList.add('correct');
+            });
+        }
+
+        // 延遲進入下一題
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < currentQuestions.length) {
+                resultArea.innerText = "";
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }, 1500);
+    }
+
+    // 顯示最終分數
+    function showScore() {
+        document.getElementById('question-screen').classList.add('hidden');
+        document.getElementById('score-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+
+    // 啟動測驗
+    resetQuiz();
+
+</script>
+
+</body>
+</html>
