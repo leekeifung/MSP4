@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小四中文溫習工具：成語選詞填充特訓</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            background-color: #f4f9f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .word-bank {
+            background-color: #e8f4f8;
+            border: 2px dashed #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .word-bank h3 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        .word-tag {
+            display: inline-block;
+            background: #fff;
+            padding: 5px 12px;
+            margin: 5px;
+            border-radius: 20px;
+            border: 1px solid #bdc3c7;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .quiz-item {
+            background: #fafafa;
+            border-left: 5px solid #bdc3c7;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s;
+        }
+        .quiz-item.correct { border-left-color: #2ecc71; background-color: #f2fbf5; }
+        .quiz-item.wrong { border-left-color: #e74c3c; background-color: #fdf4f4; }
+        
+        .question {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1px solid #dcdde1;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+        .option-btn:hover { background: #f1f2f6; }
+        .option-btn.selected {
+            background: #3498db;
+            color: #fff;
+            border-color: #2980b9;
+        }
+        
+        .hint-box, .rationale-box {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: none;
+        }
+        .hint-box { background: #fef5d1; color: #b78a00; border: 1px solid #fbe8a6; }
+        .rationale-box { background: #e1f5fe; color: #0288d1; }
+        
+        .control-panel {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .action-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 5px;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background: #27ae60; }
+        .btn-hint { background: #f1c40f; color: #333; }
+        .btn-hint:hover { background: #d4ac0d; }
+        
+        .score-display {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #2c3e50;
+            display: none;
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; padding: 0; }
+            .action-btn, .hint-box, .rationale-box { display: none !important; }
+            .option-btn { border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎒 小四中文温習工具：成語選詞填充特訓</h1>
+    <div class="subtitle">請閱讀句子意思，並在選項中選出最合適的成語補上。</div>
+
+    <!-- 成語庫 -->
+    <div class="word-bank">
+        <h3>填空成語庫</h3>
+        <span class="word-tag">雞鳴狗盜</span>
+        <span class="word-tag">濫竽充數</span>
+        <span class="word-tag">一竅不通</span>
+        <span class="word-tag">鵬程萬里</span>
+        <span class="word-tag">平步青雲</span>
+        <span class="word-tag">舉案齊眉</span>
+        <span class="word-tag">四面楚歌</span>
+        <span class="word-tag">豁然開朗</span>
+        <span class="word-tag">進退維谷</span>
+    </div>
+
+    <!-- 題目開始 -->
+    <div id="quiz-wrapper"></div>
+
+    <!-- 按鈕與分數顯示 -->
+    <div class="control-panel">
+        <button class="action-btn btn-hint" onclick="toggleAllHints()">提示小幫手</button>
+        <button class="action-btn" onclick="checkAnswers()">檢查答案</button>
+    </div>
+    <div id="score-result" class="score-display"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            num: 1,
+            q: "正直的人應該追求真才實學，而不屑於使用那些（______）的卑劣手段來獲取利益。",
+            options: ["雞鳴狗盜", "鵬程萬里", "豁然開朗", "平步青雲"],
+            correct: "雞鳴狗盜",
+            hint: "這個成語原指學公雞叫或扮狗偷竊，現多用來貶低不正當、卑下的手段。",
+            rationale: "「雞鳴狗盜」比喻微不足道的技能，也指卑下的行為，符合句子中「卑劣手段」的語境。"
+        },
+        {
+            num: 2,
+            q: "這次樂團的選拔非常嚴格，每位成員都必須具備專業水準，絕不容許有人（______）。",
+            options: ["進退維谷", "濫竽充數", "四面楚歌", "一竅不通"],
+            correct: "濫竽充數",
+            hint: "想想那個不會吹竽卻裝模作樣混在樂隊裡的南郭先生。",
+            rationale: "「濫竽充數」比喻沒有真才實學的人混在行家隊伍中充數，正符合選拔嚴格、不准混水摸魚的情境。"
+        },
+        {
+            num: 3,
+            q: "小明雖然體育成績優異，但對電腦程式設計卻是（______），完全不知道該如何下手。",
+            options: ["舉案齊眉", "豁然開朗", "一竅不通", "鵬程萬里"],
+            correct: "一竅不通",
+            hint: "形容心靈像沒有孔洞一樣，一點兒都不明白、不開竅。",
+            rationale: "「一竅不通」形容對某種事物或技術完全不懂，正對應小明不會電腦程式的情況。"
+        },
+        {
+            num: 4,
+            q: "在小學畢業禮上，校長祝願全體畢業生未來（______），在新的中學生活中有美好的發展。",
+            options: ["雞鳴狗盜", "鵬程萬里", "平步青雲", "舉案齊眉"],
+            correct: "鵬程萬里",
+            hint: "想像一隻巨大的鯤鵬展翅高飛，飛向萬里之外，常用於畢業祝福。",
+            rationale: "「鵬程萬里」比喻前程遠大，常被用來祝賀畢業生或遠行的人，屬於褒義詞。"
+        },
+        {
+            num: 5,
+            q: "張叔叔憑藉著卓越的科研成果，短短幾年內就（______），成為了該領域最年輕的首席科學家。",
+            options: ["平步青雲", "豁然開朗", "一竅不通", "濫竽充數"],
+            correct: "平步青雲",
+            hint: "形容就像腳步輕快地走上青雲（高處）一樣容易，指地位提升極快。",
+            rationale: "「平步青雲」比喻順利地晉升到很高的地位，符合張叔叔幾年內成為首席科學家的情境。"
+        },
+        {
+            num: 6,
+            q: "王伯伯和王奶奶結婚五十年來始終（______），相敬如賓，是鄰居們公認的模範夫妻。",
+            options: ["四面楚歌", "進退維谷", "舉案齊眉", "鵬程萬里"],
+            correct: "舉案齊眉",
+            hint: "古人送飯時將托盤（案）舉到眉毛那麼高，以示對配偶的尊敬。",
+            rationale: "「舉案齊眉」專門形容夫妻互敬互愛，符合「相敬如賓」和「模範夫妻」的描述。"
+        },
+        {
+            num: 7,
+            q: "這家公司因為連年虧損，現在又面臨多起官司和競爭對手的打壓，正處於（______）的境地。",
+            options: ["四面楚歌", "一竅不通", "雞鳴狗盜", "豁然開朗"],
+            correct: "四面楚歌",
+            hint: "想像被敵軍包圍，四周都傳來敵方的歌聲，感到孤立無援、四面受敵。",
+            rationale: "「四面楚歌」比喻陷入孤立無援、四面受敵的危險境地，符合公司當前遭到多重打擊的慘狀。"
+        },
+        {
+            num: 8,
+            q: "原本我對這道數學題百思不得其解，經過老師的點撥，我頓時（______），很快就找到了答案。",
+            options: ["平步青雲", "濫竽充數", "豁然開朗", "四面楚歌"],
+            correct: "豁然開朗",
+            hint: "形容原本困惑的思緒突然變得開闊、明亮，一下子明白了。",
+            rationale: "「豁然開朗」形容由狹窄幽暗轉為寬闊明亮，也引申為思想、心情因為得到啟發而突然開通領悟。"
+        },
+        {
+            num: 9,
+            q: "前面的道路被洪水淹沒，後面的山路又發生了塌方，登山隊陷入了（______）的困難處境。",
+            options: ["雞鳴狗盜", "進退維谷", "鵬程萬里", "舉案齊眉"],
+            correct: "進退維谷",
+            hint: "「谷」在這裡指困境，形容向前走或向後退都非常困難，陷入兩難。",
+            rationale: "「進退維谷」形容處於進退兩難的境地，正好對應登山隊「前有洪水，後有塌方」的無路可走處境。"
+        }
+    ];
+
+    // 渲染題目
+    const wrapper = document.getElementById('quiz-wrapper');
+    quizData.forEach((item, index) => {
+        let optionsHTML = '';
+        item.options.forEach(opt => {
+            optionsHTML += `<button class="option-btn" onclick="selectOption(${index}, '${opt}', this)">${opt}</button>`;
+        });
+
+        const html = `
+            <div class="quiz-item" id="quiz-${index}">
+                <div class="question">問題 ${item.num}：${item.q}</div>
+                <div class="options">${optionsHTML}</div>
+                <div class="hint-box" id="hint-${index}">💡 提示：${item.hint}</div>
+                <div class="rationale-box" id="ratio-${index}">📝 解析：${item.rationale}</div>
+            </div>
+        `;
+        wrapper.innerHTML += html;
+    });
+
+    // 儲存用戶答案
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    // 選擇答案功能
+    function selectOption(qIndex, val, btnObj) {
+        userAnswers[qIndex] = val;
+        // 清除同一題其他按鈕的選中樣式
+        const buttons = document.getElementById(`quiz-${qIndex}`).getElementsByClassName('option-btn');
+        for (let btn of buttons) {
+            btn.classList.remove('selected');
+        }
+        // 為當前點擊的按鈕加上樣式
+        btnObj.classList.add('selected');
+    }
+
+    // 切換顯示/隱藏提示
+    let hintsVisible = false;
+    function toggleAllHints() {
+        hintsVisible = !hintsVisible;
+        const hintBoxes = document.getElementsByClassName('hint-box');
+        for (let box of hintBoxes) {
+            box.style.display = hintsVisible ? 'block' : 'none';
+        }
+    }
+
+    // 檢查答案功能
+    function checkAnswers() {
+        let score = 0;
+        let unanswered = false;
+
+        quizData.forEach((item, index) => {
+            const quizItem = document.getElementById(`quiz-${index}`);
+            const ratioBox = document.getElementById(`ratio-${index}`);
+            
+            // 顯示解析
+            ratioBox.style.display = 'block';
+
+            if (userAnswers[index] === null) {
+                unanswered = true;
+            }
+
+            if (userAnswers[index] === item.correct) {
+                score++;
+                quizItem.className = 'quiz-item correct';
+            } else {
+                quizItem.className = 'quiz-item wrong';
+            }
+        });
+
+        // 顯示分數
+        const scoreResult = document.getElementById('score-result');
+        scoreResult.style.display = 'block';
+        if (unanswered) {
+            scoreResult.innerHTML = `⚠️ 有題目未作答！目前得分：${score} / ${quizData.length}`;
+            scoreResult.style.color = '#e67e22';
+        } else {
+            scoreResult.innerHTML = `🎉 測試完成！小朋友的得分是：${score} / ${quizData.length}`;
+            if (score === quizData.length) {
+                scoreResult.innerHTML += "（太棒了！全對！）";
+                scoreResult.style.color = '#2ecc71';
+            } else {
+                scoreResult.style.color = '#2c3e50';
+            }
+        }
+        
+        // 置頂平滑滾動到分數
+        scoreResult.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
