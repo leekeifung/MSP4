@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>詞義理解練習 - 詞彙辨析</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --correct-color: #27ae60;
+            --wrong-color: #e74c3c;
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft JhengHei';
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2980b9;
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #eef7ff;
+            border-color: #3498db;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-color);
+            color: white;
+            border-color: var(--wrong-color);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        #score-area {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 2px solid #3498db;
+            margin-bottom: 20px;
+            z-index: 100;
+        }
+
+        button#reset-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 25px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button#reset-btn:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+
+<div id="score-area">得分: <span id="current-score">0</span> / 20</div>
+
+<div class="container">
+    <h1>詞義理解練習</h1>
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+    <button id="reset-btn" onclick="initQuiz()">重新開始練習</button>
+</div>
+
+<script>
+    // 題目數據庫
+    // correct: 正確答案, distractors: 語意相關的干擾項
+    const quizData = [
+        { q: "他決不會_______自己的信仰，即使面對重重困難。", correct: "妄棄", distractors: ["放棄", "遺忘", "拋棄"] },
+        { q: "看到失去親人的消息，他的內心感到萬分_______。", correct: "悲哀", distractors: ["難過", "憂鬱", "傷心"] },
+        { q: "母親對孩子那份無私的_______，是世界上最溫暖的力量。", correct: "至愛", distractors: ["最愛", "摯愛", "親愛"] },
+        { q: "當大自然的美景觸動心靈時，人與天地之間彷彿產生了一種_______。", correct: "感應", distractors: ["感觸", "響應", "感動"] },
+        { q: "這次成功的經驗，能幫助學生_______對學問的追求。", correct: "提升", distractors: ["提高", "進步", "升級"] },
+        { q: "科學家利用非常_______的儀器來進行這項實驗。", correct: "精密", distractors: ["精確", "細緻", "精良"] },
+        { q: "製作這件藝術品的手續非常_______，需要極大的耐心。", correct: "繁複", distractors: ["複雜", "繁瑣", "困難"] },
+        { q: "在物資匱乏的時期，我們必須學會_______用。<br> (注意：此題考查日常應用)", correct: "節省", distractors: ["儲蓄", "減省", "縮減"] },
+        { q: "對於老師多年來的悉心教導，學生心中充滿了_______。", correct: "感激", distractors: ["感動", "感謝", "感佩"] },
+        { q: "在災難發生時，社會各界紛紛伸出援手提供_______。", correct: "支援", distractors: ["幫助", "扶持", "支持"] },
+        { q: "這部機器需要人工的_______才能正常運作。", correct: "輔助", distractors: ["協助", "幫忙", "配合"] },
+        { q: "醫生建議他透過飲食_______，以維持身體健康。", correct: "調劑", distractors: ["調節", "調整", "調配"] },
+        { q: "現在我們生活在一個_______時代，科技改變了世界。", correct: "虛擬", distractors: ["假象", "模擬", "虛幻"] },
+        { q: "這項研究的_______非常廣泛，涵蓋了社會各個層面。", correct: "範疇", distractors: ["範圍", "界限", "部門"] },
