@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小四中文：22個精準詞義理解特訓</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            background-color: #f0f7ff;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2980b9;
+            text-align: center;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+        }
+        .instruction {
+            background: #fff9db;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #f1c40f;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #dee2e6;
+        }
+        .word-tag {
+            background: #e1f5fe;
+            color: #0277bd;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #b3e5fc;
+        }
+        .quiz-item {
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+            transition: 0.3s;
+        }
+        .quiz-item:last-child { border-bottom: none; }
+        .question {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 2px solid #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { background: #f8f9fa; border-color: #bdc3c7; }
+        .option-btn.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        .correct-ans { border-color: #2ecc71 !important; background-color: #e8f5e9 !important; color: #2e7d32 !important; font-weight: bold; }
+        .wrong-ans { border-color: #e74c3c !important; background-color: #ffebee !important; color: #c62828 !important; }
+
+        .feedback {
+            margin-top: 15px;
+            display: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .hint-box { background: #fffde7; border: 1px solid #fff59d; color: #827717; }
+        .ratio-box { background: #e3f2fd; border: 1px solid #bbdefb; color: #1565c0; margin-top: 8px; }
+
+        .footer-btns {
+            position: sticky;
+            bottom: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .main-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            margin: 5px 10px;
+        }
+        .main-btn:hover { background: #27ae60; }
+        .hint-toggle { background: #f1c40f; box-shadow: 0 4px 15px rgba(241, 196, 15, 0.4); }
+        .retry-btn { background: #9b59b6; box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4); display: none; }
+        
+        #score-overlay {
+            display: none;
+            text-align: center;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📚 小四中文：22 個精準詞義理解特訓</h1>
+    <div class="instruction">小朋友，請根據句子意思，選出最準確的詞語填在括號內。</div>
+
+    <div class="word-bank" id="wordBank"></div>
+
+    <div id="quizContainer"></div>
+
+    <div class="footer-btns">
+        <button class="main-btn hint-toggle" id="hintToggleBtn" onclick="toggleHints()">顯示提示</button>
+        <button class="main-btn" id="checkBtn" onclick="calculateScore()">檢查答案</button>
+        <button class="main-btn retry-btn" id="retryBtn" onclick="initQuiz()">重新挑戰（隨機排序）</button>
+    </div>
+
+    <div id="score-overlay"></div>
+</div>
+
+<script>
+    const vocabularyList = ["妄棄", "悲哀", "至愛", "感應", "提升", "精密", "繁複", "節省", "感激", "支援", "輔助", "調劑", "虛擬", "範疇", "發揮", "傳統", "苦口婆心", "日新月異", "萬水千山", "虛構", "普及", "廣泛"];
+    
+    const originalQuestions = [
+        { q: "糧食來之不易，我們應該倍加珍惜，絕不可隨意（______）。", options: ["妄棄", "拋棄", "捨棄", "浪費"], correct: "妄棄", hint: "形容胡亂、不負責任地丟棄東西。", ratio: "「妄棄」強調隨意、亂丟，最符合不珍惜糧食的語境。" },
+        { q: "聽聞災區的慘狀，大家都感到無比（______）。", options: ["悲哀", "悲憤", "淒涼", "痛苦"], correct: "悲哀", hint: "形容一種深沈的傷感與同情。", ratio: "「悲哀」指內心的悲傷，適合形容對不幸事件的情感反應。" },
+        { q: "這隻小狗是小明心目中的（______），他每天放學都急著回家陪牠。", options: ["至愛", "鍾愛", "偏愛", "愛惜"], correct: "至愛", hint: "代表「最心愛的」那個對象。", ratio: "「至愛」是名詞，指最喜愛的人或物。" },
+        { q: "雙胞胎之間似乎有一種奇妙的（______），一方不舒服，另一方也會有感覺。", options: ["感應", "感想", "反應", "感覺"], correct: "感應", hint: "指事物之間無形的相互聯繫或影響。", ratio: "「感應」常用於心理或生理的同步連動。" },
+        { q: "為了（______）學生的語文水平，學校推行了每日閱讀計畫。", options: ["提升", "提高", "升級", "升遷"], correct: "提升", hint: "指使程度、水平增高。", ratio: "形容「水平」進步時，用「提升」最為準確。" },
+        { q: "這款名錶的零件極其（______），只有經驗豐富的師傅才能修理。", options: ["精密", "精彩", "精細", "精美"], correct: "精密", hint: "形容儀器或科技產品製作準確且細緻。", ratio: "手錶零件講求準確度，故用「精密」。" },
+        { q: "這項工程的步驟非常（______），每一個細節都不能馬虎。", options: ["繁複", "複雜", "繁重", "反覆"], correct: "繁複", hint: "形容程序、手續很多而且細雜。", ratio: "「繁複」強調多且重疊，適合形容繁雜的步驟。" },
+        { q: "我們應該養成（______）用水的好習慣，保護珍貴的水資源。", options: ["節省", "節制", "儉省", "省事"], correct: "節省", hint: "意思是把多餘的耗費省下來。", ratio: "「節省」是形容節約資源（水、電、錢）的最常用詞。" },
+        { q: "對於您的熱心幫助，我由衷地表示（______）。", options: ["感激", "感觸", "感謝", "感恩"], correct: "感激", hint: "指受到恩惠而內心激動、感謝。", ratio: "「感激」比「感謝」程度更深，體現「由衷」之情。" },
+        { q: "當你在學習上遇到困難時，老師和同學都會為你提供（______）。", options: ["支援", "支撐", "支持", "支付"], correct: "支援", hint: "指用人力或物力給予實質幫助。", ratio: "「支援」強調行動上的協助。" },
+        { q: "課外活動能（______）課堂教學，讓學生得到更全面的發展。", options: ["輔助", "輔導", "補充", "輔佐"], correct: "輔助", hint: "指從旁協助，使主要事物更完善。", ratio: "課外活動是正課的協助工具，用「輔助」最貼切。" },
+        { q: "適當的體育運動可以（______）繁忙的學習生活，減輕壓力和疲勞。", options: ["調劑", "調整", "調和", "調節"], correct: "調劑", hint: "常用於使忙碌的生活變得有變化、有樂趣。", ratio: "「調劑」有平衡、舒緩枯燥生活的意思。" },
+        { q: "現在的科技發達，我們可以在（______）的世界裡體驗太空旅行。", options: ["虛擬", "虛構", "虛假", "幻想"], correct: "虛擬", hint: "利用技術模擬出來的非真實環境。", ratio: "電腦模擬環境固定搭配「虛擬」。" },
+        { q: "這道題目不屬於我們的考試（______），所以不用太擔心。", options: ["範疇", "範圍", "種類", "地盤"], correct: "範疇", hint: "指事物所屬的領域或類別。", ratio: "「範疇」是正式用語，指學術或知識的分類範圍。" },
+        { q: "只要你肯努力，你的才能一定會有（______）的機會。", options: ["發揮", "發展", "發散", "發放"], correct: "發揮", hint: "把內在的力量或本領表現出來。", ratio: "才能的展現稱為「發揮」。" },
+        { q: "春節吃團年飯是我們中國人的（______）習俗，代代相傳。", options: ["傳統", "傳說", "傳播", "古典"], correct: "傳統", hint: "指世代相傳的精神或風俗。", ratio: "「傳統」指歷史悠久且代代相傳的習慣。" },
+        { q: "媽媽（______）地勸導我，希望我能明白學習的重要性。", options: ["苦口婆心", "語重心長", "千言萬語", "口乾舌燥"], correct: "苦口婆心", hint: "形容誠懇、耐心地再三勸告。", ratio: "成語，專指長輩對晚輩耐心的規勸。" },
+        { q: "科學技術進步飛快，電子產品的更新換代可以說是（______）。", options: ["日新月異", "與時並進", "變化無常", "煥然一新"], correct: "日新月異", hint: "形容進步非常快，每天都有新面貌。", ratio: "形容科技進步速度的最標準成語。" },
+        { q: "探險家們歷盡（______），終於到達了這座神祕的森林。", options: ["萬水千山", "跋山涉水", "山青水秀", "千辛萬苦"], correct: "萬水千山", hint: "形容路途遙遠而且艱辛。", ratio: "此處需填入名詞結構，「萬水千山」最合適。" },
+        { q: "這部長篇小說的情節純屬（______），請讀者不必對號入座。", options: ["虛構", "虛擬", "虛假", "虛無"], correct: "虛構", hint: "指憑空編造的故事或情節。", ratio: "小說內容是編出來的，術語叫「虛構」。" },
+        { q: "隨著網絡的（______），現在幾乎家家戶戶都能上網。", options: ["普及", "普遍", "推廣", "遍佈"], correct: "普及", hint: "指事物變得很普通，每個人都能接觸到。", ratio: "科技進入大眾生活的現象稱為「普及」。" },
+        { q: "這項新政策在社會上引起了（______）的討論。", options: ["廣泛", "寬闊", "巨大", "普遍"], correct: "廣泛", hint: "意思是範圍很大，牽涉的人或事很多。", ratio: "討論或研究的範圍很大，常用「廣泛」。" }
+    ];
+
+    let currentQuestions = [];
+    let userAnswers = [];
+    let showH = false;
+
+    // 洗牌演算法
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 初始化測驗
+    function initQuiz() {
+        // 1. 重置狀態
+        showH = false;
+        document.getElementById('score-overlay').style.display = 'none';
+        document.getElementById('retryBtn').style.display = 'none';
+        document.getElementById('checkBtn').style.display = 'inline-block';
+        document.getElementById('hintToggleBtn').innerText = '顯示提示';
+        
+        // 2. 隨機排序題目
+        currentQuestions = shuffle([...originalQuestions]);
+        userAnswers = new Array(currentQuestions.length).fill(null);
+
+        // 3. 生成詞語標籤 (只生成一次即可)
+        const bank = document.getElementById('wordBank');
+        bank.innerHTML = "";
+        vocabularyList.forEach(w => {
+            bank.innerHTML += `<span class="word-tag">${w}</span>`;
+        });
+
+        // 4. 生成題目 HTML
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = "";
+        currentQuestions.forEach((q, i) => {
+            let optHtml = q.options.map(o => `<button class="option-btn" onclick="pick(${i}, '${o}', this)">${o}</button>`).join('');
+            container.innerHTML += `
+                <div class="quiz-item" id="q-box-${i}">
+                    <div class="question">${i+1}. ${q.q}</div>
+                    <div class="options">${optHtml}</div>
+                    <div id="hint-${i}" class="feedback hint-box">💡 提示：${q.hint}</div>
+                    <div id="ratio-${i}" class="feedback ratio-box">📝 解析：${q.ratio}</div>
+                </div>
+            `;
+        });
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function pick(qIdx, val, btn) {
+        userAnswers[qIdx] = val;
+        let btns = document.getElementById(`q-box-${qIdx}`).querySelectorAll('.option-btn');
+        btns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function toggleHints() {
+        showH = !showH;
+        document.querySelectorAll('.hint-box').forEach(b => b.style.display = showH ? 'block' : 'none');
+        document.getElementById('hintToggleBtn').innerText = showH ? '隱藏提示' : '顯示提示';
+    }
+
+    function calculateScore() {
+        let score = 0;
+        currentQuestions.forEach((q, i) => {
+            const box = document.getElementById(`q-box-${i}`);
+            const ratio = document.getElementById(`ratio-${i}`);
+            const btns = box.querySelectorAll('.option-btn');
+            
+            ratio.style.display = 'block';
+            
+            btns.forEach(b => {
+                b.classList.remove('correct-ans', 'wrong-ans');
+                if (b.innerText === q.correct) b.classList.add('correct-ans');
+                if (userAnswers[i] === b.innerText && userAnswers[i] !== q.correct) b.classList.add('wrong-ans');
+            });
+
+            if (userAnswers[i] === q.correct) score++;
+        });
+
+        const overlay = document.getElementById('score-overlay');
+        overlay.style.display = 'block';
+        overlay.innerHTML = `<h2>得分：${score} / ${currentQuestions.length}</h2><p>${score === currentQuestions.length ? '太棒了！你已經完全掌握這些詞語了！' : '做得好！看看解析，把答錯的詞語記下來吧。'}</p>`;
+        
+        document.getElementById('retryBtn').style.display = 'inline-block';
+        document.getElementById('checkBtn').style.display = 'none';
+        
+        overlay.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 頁面加載後執行一次
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
