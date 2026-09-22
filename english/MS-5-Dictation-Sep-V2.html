@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4338ca">
+  <title>2026/27 J.5 English Dictation — First Term</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f6fc;
+      --paper: #fff;
+      --ink: #172033;
+      --muted: #59677d;
+      --line: #dce3ef;
+      --primary: #4338ca;
+      --primary-light: #eef2ff;
+      --green: #166534;
+      --green-bg: #f0fdf4;
+      --red: #b91c1c;
+      --red-bg: #fff5f5;
+      --amber: #92400e;
+      --amber-bg: #fffbeb;
+      --blue: #075985;
+      --blue-bg: #e0f2fe;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      padding-bottom: 100px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button, select { touch-action: manipulation; }
+
+    button {
+      min-height: 44px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: #a5b4fc;
+      background: #f5f7ff;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .5;
+    }
+
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #818cf8;
+      outline-offset: 3px;
+    }
+
+    .primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .primary:hover:not(:disabled) {
+      background: #312e81;
+      color: #fff;
+    }
+
+    .secondary {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+
+    .audio-button {
+      background: var(--blue-bg);
+      color: var(--blue);
+      border-color: #bae6fd;
+    }
+
+    .audio-button.playing {
+      background: #0369a1;
+      color: #fff;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 100;
+      padding: 10px;
+      background: #fff;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    header {
+      padding: 36px 20px;
+      background: linear-gradient(130deg, #312e81, #4f46e5);
+      color: #fff;
+    }
+
+    .header-inner, main, footer {
+      width: min(1160px, calc(100% - 28px));
+      margin-inline: auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: #c7d2fe;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.15;
+    }
+
+    header p { margin: 13px 0 0; }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    nav a {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #a5b4fc;
+      color: #fff;
+      text-decoration: none;
+      background: #ffffff15;
+    }
+
+    main { margin-top: 24px; }
+
+    .panel {
+      margin-bottom: 24px;
+      padding: clamp(18px, 3vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 8px 26px #23345c08;
+      scroll-margin-top: 16px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      line-height: 1.35;
+    }
+
+    h3 { margin: 0; }
+
+    .part-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--primary);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+    }
+
+    .intro, .muted {
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .note {
+      padding: 13px 16px;
+      border-left: 4px solid #818cf8;
+      border-radius: 8px;
+      background: #f5f7ff;
+      font-size: .93rem;
+    }
+
+    .note ul {
+      margin: 0;
+      padding-left: 21px;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: minmax(220px, 2fr) 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .settings label {
+      display: grid;
+      gap: 6px;
+      font-weight: 700;
+      font-size: .93rem;
+    }
+
+    select {
+      width: 100%;
+      min-height: 44px;
+      padding: 8px;
+      border: 1px solid #bdc8dc;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 17px 0 12px;
+    }
+
+    .check-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+      font-weight: 650;
+    }
+
+    .check-option input {
+      width: 20px;
+      height: 20px;
+      margin-top: 4px;
+      accent-color: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    .score {
+      margin-bottom: 6px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      font-size: .93rem;
+      font-weight: 750;
+    }
+
+    .score.complete {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    progress {
+      display: block;
+      width: 100%;
+      height: 9px;
+      margin-bottom: 20px;
+      accent-color: var(--primary);
+    }
+
+    .group-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 27px 0 13px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .group-heading h3 { font-size: 1.16rem; }
+
+    .verb-grid,
+    .phrase-grid,
+    .line-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .verb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .phrase-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .line-grid { grid-template-columns: 1fr; }
+
+    .card {
+      min-width: 0;
+      padding: 16px;
+      border: 2px solid var(--line);
+      border-radius: 15px;
+      background: #fff;
+    }
+
+    .card[data-result="correct"] { border-color: #86cfa0; }
+    .card[data-result="wrong"] { border-color: #f3aaa8; }
+    .card[data-result="almost"],
+    .card[data-result="empty"] { border-color: #e9ca73; }
+
+    .card.listening {
+      outline: 3px solid #38bdf8;
+      outline-offset: 2px;
+      background: #f5fbff;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .question-number {
+      display: inline-grid;
+      place-items: center;
+      min-width: 38px;
+      min-height: 34px;
+      padding: 3px 8px;
+      border-radius: 9px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 850;
+    }
+
+    .picture {
+      font-size: 2rem;
+      line-height: 1.2;
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+    }
+
+    .speaker-label {
+      color: #475569;
+      font-size: .88rem;
+      font-weight: 750;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .verb-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .field { min-width: 0; }
+
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: .86rem;
+      font-weight: 800;
+    }
+
+    .field label small {
+      display: block;
+      color: var(--muted);
+      font-size: .77rem;
+      font-weight: 500;
+    }
+
+    .answer-input {
+      display: block;
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 11px;
+      border: 2px solid #cbd5e1;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    textarea.answer-input {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .answer-input::placeholder { color: #8793a6; }
+
+    .answer-input[data-state="correct"] {
+      border-color: #43a66d;
+      background: var(--green-bg);
+    }
+
+    .answer-input[data-state="wrong"] {
+      border-color: #db6b6b;
+      background: var(--red-bg);
+    }
+
+    .answer-input[data-state="almost"],
+    .answer-input[data-state="empty"] {
+      border-color: #d6a635;
+      background: var(--amber-bg);
+    }
+
+    .field-feedback {
+      min-height: 21px;
+      margin: 5px 0 0;
+      font-size: .81rem;
+      font-weight: 700;
+    }
+
+    .field-feedback[data-state="correct"] { color: var(--green); }
+    .field-feedback[data-state="wrong"] { color: var(--red); }
+    .field-feedback[data-state="almost"],
+    .field-feedback[data-state="empty"] { color: var(--amber); }
+
+    .worksheet-dash {
+      min-height: 46px;
+      padding: 9px 11px;
+      border: 1px dashed #b8c3d5;
+      border-radius: 9px;
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .worksheet-dash small {
+      margin-left: 8px;
+      font-size: .76rem;
+    }
+
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .row-summary {
+      margin: 8px 0 0;
+      font-size: .86rem;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .reference {
+      margin-top: 13px;
+      padding: 13px;
+      border: 1px solid #c4b5fd;
+      border-radius: 10px;
+      background: #f7f4ff;
+      overflow-wrap: anywhere;
+    }
+
+    .reference strong {
+      color: #5b21b6;
+      font-size: .86rem;
+    }
+
+    .reference p {
+      margin: 7px 0;
+      white-space: pre-line;
+    }
+
+    .reference button { margin-top: 5px; }
+
+    .player-bar {
+      position: fixed;
+      z-index: 50;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 11px max(14px, calc((100vw - 1130px) / 2));
+      padding-bottom: calc(11px + env(safe-area-inset-bottom));
+      border-top: 1px solid #c7d2fe;
+      background: #f8faff;
+      box-shadow: 0 -5px 20px #26324b0c;
+    }
+
+    #audioStatus {
+      margin: 0;
+      color: #334155;
+      font-size: .88rem;
+      overflow-wrap: anywhere;
+    }
+
+    #stopAudio {
+      flex: 0 0 auto;
+      color: #991b1b;
+      border-color: #fecaca;
+      background: #fff1f2;
+    }
+
+    footer {
+      padding: 10px 5px 25px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 800px) {
+      .settings { grid-template-columns: 1fr 1fr; }
+      .settings label:first-child { grid-column: 1 / -1; }
+      .verb-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .header-inner, main, footer {
+        width: min(1160px, calc(100% - 18px));
+      }
+
+      header { padding: 28px 10px; }
+      .panel { padding: 17px 12px; }
+      .card { padding: 13px; }
+      .settings { grid-template-columns: 1fr; }
+      .settings label:first-child { grid-column: auto; }
+      .verb-fields { grid-template-columns: 1fr; }
+      .phrase-grid { grid-template-columns: 1fr; }
+      .toolbar button { flex: 1 1 140px; }
+      .picture { font-size: 1.7rem; }
+      textarea.answer-input { min-height: 118px; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to practice</a>
+
+  <header>
+    <div class="header-inner">
+      <p class="eyebrow">2026/27 · FIRST TERM · J.5</p>
+      <h1>English Dictation</h1>
+      <p>🔊 Listen → ✍️ Type → ✅ Check → 🌱 Try again</p>
+
+      <nav aria-label="Jump to a section">
+        <a href="#part1">Part 1 · Verb Table</a>
+        <a href="#part2">Part 2 · Farmer Lam</a>
+        <a href="#part3">Part 3 · Happy Actions</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <noscript>
+      <section class="panel">
+        <strong>Please enable JavaScript to use this activity.</strong>
+        <p lang="zh-Hant">請啟用 JavaScript，才能使用發音、默寫及核對功能。</p>
+      </section>
+    </noscript>
+
+    <section class="panel" aria-labelledby="settingsTitle">
+      <h2 id="settingsTitle">Audio &amp; Checking Settings</h2>
+
+      <div class="settings">
+        <label for="voice">
+          English voice / 英語聲音
+          <select id="voice">
+            <option value="">Automatic English voice</option>
+          </select>
+        </label>
+
+        <label for="speed">
+          Speed / 語速
+          <select id="speed">
+            <option value="0.2">0.2×</option>
+            <option value="0.3">0.3×</option>
+            <option value="0.5">0.5×</option>
+            <option value="0.7">0.7×</option>
+            <option value="0.9" selected>0.9×</option>
+            <option value="1">1.0×</option>
+          </select>
+        </label>
+
+        <label for="gap">
+          Gap between items / 題目間停頓
+          <select id="gap">
+            <option value="0">0 seconds</option>
+            <option value="1" selected>1 second</option>
+            <option value="2">2 seconds</option>
+            <option value="3">3 seconds</option>
+            <option value="5">5 seconds</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="toolbar">
+        <button id="testVoice" class="audio-button" type="button" data-audio>
+          🔊 Test voice
+        </button>
+        <button id="reloadVoices" type="button">↻ Reload voices</button>
+      </div>
+
+      <label class="check-option" for="strict">
+        <input id="strict" type="checkbox">
+        <span>
+          Strict sentence checking
+          <span lang="zh-Hant">／句子嚴格核對大小寫及標點</span>
+        </span>
+      </label>
+
+      <p class="muted" lang="zh-Hant">
+        預設核對單字及次序，忽略句子的大小寫和一般標點；
+        縮寫內的撇號仍須正確。動詞欄只填指定形式，不加句末標點。
+        直／曲引號及多餘空格會作統一處理。
+      </p>
+
+      <p class="muted" lang="zh-Hant">
+        所有播放共用語速設定。修改聲音或語速會停止目前播放，請再按 Listen。
+        慢速播放時，長句會分成較短片段朗讀。
+        若沒有聲音，請按 Test voice 或 Reload voices，並檢查裝置音量。
+      </p>
+
+      <p id="voiceHint" class="muted">Loading English voices…</p>
+    </section>
+
+    <section id="part1" class="panel" aria-labelledby="part1Title">
+      <span class="part-label">PART 1</span>
+      <h2 id="part1Title">Verb Table 1 — 8 Verbs</h2>
+
+      <p class="intro">
+        <strong>Hidden Base Form — Listen &amp; Type (Randomized).</strong>
+        Listen to the base form. Type it and complete the other forms.
+      </p>
+
+      <div class="note" lang="zh-Hant">
+        <ul>
+          <li>基本形先隱藏；按「Base form」只會讀出基本形。</li>
+          <li>
+            Present continuous 欄只填 <strong>-ing 形式</strong>；
+            完整時態結構是 am/is/are + -ing。
+          </li>
+          <li>
+            Present perfect 欄只填<strong>過去分詞</strong>；
+            完整時態結構是 have/has + 過去分詞。
+          </li>
+          <li>
+            Simple past 如有兩種形式，請兩種都填，以 / 分隔。
+            附件標示「---」的一格按原表保留，不計分。
+          </li>
+        </ul>
+      </div>
+
+      <div id="practice1"></div>
+    </section>
+
+    <section id="part2" class="panel" aria-labelledby="part2Title">
+      <span class="part-label">PART 2 · PASSAGE DICTATION</span>
+      <h2 id="part2Title">An interview with Farmer Lam</h2>
+
+      <p class="intro">
+        Listen to each sentence and type what you hear.
+        You can also play the whole passage, including its title.
+      </p>
+
+      <p class="muted" lang="zh-Hant">
+        正文分為 14 句，保留原文次序。
+        K = Kim；FL = Farmer Lam。只需輸入句子，不用輸入人物代號。
+        在句子輸入框內，可按 Ctrl + Enter 或 ⌘ + Enter 核對該題。
+      </p>
+
+      <div id="practice2"></div>
+    </section>
+
+    <section id="part3" class="panel" aria-labelledby="part3Title">
+      <span class="part-label">PART 3 · VERBS, PHRASES &amp; EXAMPLE</span>
+      <h2 id="part3Title">What do we do when we are happy?</h2>
+
+      <p class="intro">
+        Listen to the verbs, verb phrases and example sentences.
+        Then type your answers and check them.
+      </p>
+
+      <div class="note" lang="zh-Hant">
+        斜線的不同表達及括號的可選內容分開練習，共 17 個詞組。
+        例文分為 5 句，並補回原文在 We're 前缺少的開引號。
+        重新排序只影響詞組，例文保持原有次序。
+      </div>
+
+      <div id="practice3"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>J.5 English Dictation · Listen, practise and improve</p>
+    <p lang="zh-Hant">
+      顯示答案只會打開參考答案，不會代填或自動計分。
+      本頁不儲存或上傳學生作答；重新整理頁面會清除進度。
+    </p>
+  </footer>
+
+  <div class="player-bar" aria-label="Playback controls">
+    <p id="audioStatus" role="status" aria-live="polite">
+      Ready. Choose a Listen button to begin.
+    </p>
+    <button id="stopAudio" type="button" disabled>■ Stop audio</button>
+  </div>
+
+  <script>
+    "use strict";
+
+    /*
+     * ==========================================================
+     * LESSON CONTENT
+     * All lesson text, styling and application code are in this file.
+     * ==========================================================
+     */
+
+    // null means the worksheet prints "---"; that cell is not graded.
+    const VERB_DATA = [
+      {
+        id: "v1",
+        icon: "🧳🏠",
+        clue: "行李與房屋",
+        forms: ["arrive", "arriving", "arrived", "arrived"]
+      },
+      {
+        id: "v2",
+        icon: "🧍",
+        clue: "一個人的狀態",
+        forms: ["be", null, "was/were", "been"]
+      },
+      {
+        id: "v3",
+        icon: "🐛🦋",
+        clue: "毛蟲與蝴蝶",
+        forms: ["become", "becoming", "became", "become"]
+      },
+      {
+        id: "v4",
+        icon: "🧒🎒",
+        clue: "小朋友與他的書包",
+        forms: ["have", "having", "had", "had"]
+      },
+      {
+        id: "v5",
+        icon: "💔",
+        clue: "裂開的心形",
+        forms: ["break", "breaking", "broke", "broken"]
+      },
+      {
+        id: "v6",
+        icon: "🧤⚾",
+        clue: "手套與棒球",
+        forms: ["catch", "catching", "caught", "caught"]
+      },
+      {
+        id: "v7",
+        icon: "🛒💰",
+        clue: "購物車與金錢",
+        forms: ["buy", "buying", "bought", "bought"]
+      },
+      {
+        id: "v8",
+        icon: "🚶📦",
+        clue: "行走的人與箱子",
+        forms: ["carry", "carrying", "carried", "carried"]
+      }
+    ].map(item => ({
+      ...item,
+      kind: "verb",
+      text: item.forms[0]
+    }));
+
+    const VERB_COLUMNS = [
+      { label: "Base form", hint: "基本形 / Simple present" },
+      { label: "Present continuous", hint: "-ing form only" },
+      { label: "Simple past", hint: "過去式" },
+      { label: "Present perfect", hint: "Past participle only / 過去分詞" }
+    ];
+
+    const FARM_DATA = [
+      [
+        "Narrator",
+        "Many families like going to holiday farms at the weekend to escape from the beeps and honks of the noisy city."
+      ],
+      [
+        "Narrator",
+        "Last week, our reporter Kim visited Sunny Family Farm, the winner of this year's Kidz Magazine Great Day Out Award."
+      ],
+      [
+        "Narrator",
+        "He interviewed the farm's owner Farmer Lam."
+      ],
+      [
+        "K · Kim",
+        "Congratulations on winning the award."
+      ],
+      [
+        "K · Kim",
+        "Lots of readers voted for you."
+      ],
+      [
+        "K · Kim",
+        "They loved the craft activities such as making candles and soap."
+      ],
+      [
+        "FL · Farmer Lam",
+        "The Craft Corner is popular on our farm."
+      ],
+      [
+        "FL · Farmer Lam",
+        "And many kids run straight to the Adventure Park to play golf or play in the tree houses."
+      ],
+      [
+        "K · Kim",
+        "Kids really love your farm."
+      ],
+      [
+        "FL · Farmer Lam",
+        "It's because they can try new things here, like hearing the cows moo and getting close to them."
+      ],
+      [
+        "FL · Farmer Lam",
+        "Kids find these interesting."
+      ],
+      [
+        "FL · Farmer Lam",
+        "Have you been to the Petting Zoo?"
+      ],
+      [
+        "K · Kim",
+        "Yes, I've just been there."
+      ],
+      [
+        "K · Kim",
+        "What's special about it?"
+      ]
+    ].map(([role, text], index) => ({
+      id: "f" + (index + 1),
+      kind: "sentence",
+      role,
+      text
+    }));
+
+    // Alternatives are separate listening items, not read as slashes.
+    const PHRASE_DATA = [
+      ["🦘", "jump for joy"],
+      ["⬆️⬇️", "jump up and down"],
+      ["🌀", "spin around"],
+      ["✊", "do a fist pump"],
+      ["✊", "give a fist pump"],
+      ["🙌", "wave our arms"],
+      ["🙌", "wave our arms in the air"],
+      ["😊", "smile"],
+      ["😆", "laugh"],
+      ["✋🤚", "give someone a high five"],
+      ["🤗", "wrap our arms around someone"],
+      ["🥹", "cry tears of joy"],
+      ["🎉", "cheer"],
+      ["😄📣", "scream with joy"],
+      ["🎵", "hum"],
+      ["🎶", "whistle"],
+      ["🐕", "wag its tail"]
+    ].map(([icon, text], index) => ({
+      id: "p" + (index + 1),
+      kind: "phrase",
+      icon,
+      clue: "開心時的動作提示",
+      text
+    }));
+
+    const EXAMPLE_DATA = [
+      "Dad shared some good news with us at dinnertime tonight.",
+      "'We're moving to a bigger house!' he said.",
+      "My sister and I were so happy that we wrapped our arms around him and squeezed him tightly.",
+      "My sister screamed with joy and spun around the room.",
+      "I think Rocky knew what was going on too because he was wagging his tail excitedly!"
+    ].map((text, index) => ({
+      id: "e" + (index + 1),
+      kind: "sentence",
+      text
+    }));
+
+    /*
+     * ==========================================================
+     * COMMON HELPERS
+     * ==========================================================
+     */
+
+    const $ = id => document.getElementById(id);
+
+    const hasSpeech =
+      "speechSynthesis" in window &&
+      "SpeechSynthesisUtterance" in window;
+
+    const synth = hasSpeech ? window.speechSynthesis : null;
+
+    function element(tag, className = "", text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function makeButton(text, handler, className = "", audio = false) {
+      const button = element("button", className, text);
+      button.type = "button";
+
+      if (audio) {
+        button.dataset.audio = "";
+        button.disabled = !hasSpeech;
+      }
+
+      button.addEventListener("click", () => handler(button));
+      return button;
+    }
+
+    function announce(message) {
+      $("audioStatus").textContent = message;
+    }
+
+    function shuffled(items, forceChange = false) {
+      const result = [...items];
+
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+
+      if (
+        forceChange &&
+        result.length > 1 &&
+        result.every((item, index) => item === items[index])
+      ) {
+        result.push(result.shift());
+      }
+
+      return result;
+    }
+
+    function allRows(model) {
+      return model.groups.flatMap(group => group.rows);
+    }
+
+    function tidy(value) {
+      return String(value ?? "")
+        .normalize("NFKC")
+        .replace(/[‘’]/g, "'")
+        .replace(/[“”]/g, '"')
+        .replace(/[‐‑–—]/g, "-")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    // Keeps apostrophes inside contractions.
+    // Punctuation between letters separates words instead of joining them.
+    function spellingKey(value) {
+      return (
+        tidy(value).toLowerCase().match(/[a-z0-9]+(?:'[a-z0-9]+)*/g) || []
+      ).join(" ");
+    }
+
+    function evaluateField(field) {
+      const answer = tidy(field.input.value);
+      const expected = tidy(field.expected);
+
+      if (!answer) return "empty";
+
+      if (field.kind === "form") {
+        if (expected === "was/were") {
+          const parts = answer
+            .toLowerCase()
+            .replace(/\b(?:and|or)\b/g, "/")
+            .replace(/[,;]/g, "/")
+            .split(/[\/\s]+/)
+            .filter(Boolean)
+            .sort();
+
+          return (
+            parts.length === 2 &&
+            parts[0] === "was" &&
+            parts[1] === "were"
+          ) ? "correct" : "wrong";
+        }
+
+        return answer.toLowerCase() === expected.toLowerCase()
+          ? "correct"
+          : "wrong";
+      }
+
+      const sameWords = spellingKey(answer) === spellingKey(expected);
+
+      if (field.kind === "sentence" && $("strict").checked) {
+        if (answer === expected) return "correct";
+        return sameWords ? "almost" : "wrong";
+      }
+
+      return sameWords ? "correct" : "wrong";
+    }
+
+    /*
+     * ==========================================================
+     * SPEECH: ONE CONTROLLABLE PLAYBACK SESSION AT A TIME
+     * ==========================================================
+     */
+
+    let voices = [];
+    let userSelectedVoice = false;
+
+    const playback = {
+      token: 0,
+      timer: null,
+      startTimer: null,
+      utterance: null,
+      button: null,
+      card: null
+    };
+
+    function voiceKey(voice) {
+      return [voice.voiceURI, voice.name, voice.lang].join("|");
+    }
+
+    function refreshVoices() {
+      if (!hasSpeech) {
+        $("voiceHint").textContent =
+          "Speech synthesis is unavailable in this browser. " +
+          "You can still type and check answers.";
+
+        ["voice", "speed", "gap", "testVoice", "reloadVoices"].forEach(id => {
+          $(id).disabled = true;
+        });
+
+        return;
+      }
+
+      const previous = $("voice").value;
+
+      try {
+        voices = synth.getVoices()
+          .filter(voice => /^en(?:[-_]|$)/i.test(voice.lang))
+          .sort((a, b) =>
+            a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name)
+          );
+      } catch {
+        voices = [];
+      }
+
+      $("voice").replaceChildren();
+      const automatic = element("option", "", "Automatic English voice");
+      automatic.value = "";
+      $("voice").append(automatic);
+
+      voices.forEach(voice => {
+        const option = element(
+          "option",
+          "",
+          voice.name + " — " + voice.lang
+        );
+
+        option.value = voiceKey(voice);
+        $("voice").append(option);
+      });
+
+      if (voices.some(voice => voiceKey(voice) === previous)) {
+        $("voice").value = previous;
+      } else if (!userSelectedVoice && voices.length) {
+        const preferred =
+          voices.find(voice => /^en[-_]GB$/i.test(voice.lang)) ||
+          voices.find(voice => voice.default) ||
+          voices.find(voice => /^en[-_]US$/i.test(voice.lang)) ||
+          voices[0];
+
+        $("voice").value = voiceKey(preferred);
+      } else {
+        $("voice").value = "";
+      }
+
+      $("voiceHint").textContent = voices.length
+        ? `${voices.length} English voice(s) available. Choose the voice you prefer.`
+        : "No English voices are listed yet. Automatic mode will request English. " +
+          "Try Reload voices, or check your device's speech-language settings.";
+    }
+
+    function stopAudio(message) {
+      playback.token++;
+      window.clearTimeout(playback.timer);
+      window.clearTimeout(playback.startTimer);
+
+      playback.timer = null;
+      playback.startTimer = null;
+
+      if (synth) synth.cancel();
+
+      if (playback.button) {
+        playback.button.classList.remove("playing");
+        playback.button.removeAttribute("aria-busy");
+      }
+
+      if (playback.card) {
+        playback.card.classList.remove("listening");
+      }
+
+      playback.button = null;
+      playback.card = null;
+      playback.utterance = null;
+
+      $("stopAudio").disabled = true;
+
+      if (message) announce(message);
+    }
+
+    // Keep long utterances shorter at the very slow speed settings.
+    // All original words are retained and spoken in order.
+    function speechChunks(text, rate) {
+      if (rate > 0.5) return [text];
+
+      const words = text.trim().split(/\s+/);
+      const limit = Math.max(4, Math.floor(26 * rate));
+      const chunks = [];
+
+      while (words.length) {
+        let take = Math.min(limit, words.length);
+
+        if (words.length > take) {
+          for (let i = take - 1; i >= Math.floor(take / 2); i--) {
+            if (/[,;:.!?]['"]?$/.test(words[i])) {
+              take = i + 1;
+              break;
+            }
+          }
+        }
+
+        chunks.push(words.splice(0, take).join(" "));
+      }
+
+      return chunks;
+    }
+
+    function playEntries(entries, button, label) {
+      if (!hasSpeech) {
+        announce("Speech synthesis is unavailable in this browser.");
+             stopAudio();
+
+      if (!entries.length) return;
+      if (!voices.length) refreshVoices();
+
+      const token = playback.token;
+      const rate = Number($("speed").value);
+      const gap = Number($("gap").value) * 1000;
+
+      const selectedVoice = voices.find(
+        voice => voiceKey(voice) === $("voice").value
+      );
+
+      const segments = [];
+
+      entries.forEach((entry, itemIndex) => {
+        const chunks = speechChunks(entry.text, rate);
+
+        chunks.forEach((text, chunkIndex) => {
+          segments.push({
+            text,
+            card: entry.card || null,
+            itemIndex,
+            lastChunk: chunkIndex === chunks.length - 1
+          });
+        });
+      });
+
+      playback.button = button;
+      button.classList.add("playing");
+      button.setAttribute("aria-busy", "true");
+      $("stopAudio").disabled = false;
+
+      function fail(message) {
+        if (token !== playback.token) return;
+        stopAudio(message);
+      }
+
+      function speakSegment(index) {
+        if (token !== playback.token) return;
+
+        if (index >= segments.length) {
+          stopAudio(label + " finished. / 播放完畢。");
+          return;
+        }
+
+        const segment = segments[index];
+
+        if (playback.card && playback.card !== segment.card) {
+          playback.card.classList.remove("listening");
+        }
+
+        playback.card = segment.card;
+
+        if (playback.card) {
+          playback.card.classList.add("listening");
+        }
+
+        const utterance = new SpeechSynthesisUtterance(segment.text);
+
+        if (selectedVoice) utterance.voice = selectedVoice;
+        utterance.lang = selectedVoice ? selectedVoice.lang : "en-GB";
+        utterance.rate = rate;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        // Retain the utterance for the duration of playback.
+        playback.utterance = utterance;
+
+        announce(
+          `${label} · Item ${segment.itemIndex + 1}/${entries.length}`
+        );
+
+        utterance.onstart = () => {
+          if (token !== playback.token) return;
+          window.clearTimeout(playback.startTimer);
+        };
+
+        utterance.onend = () => {
+          if (token !== playback.token) return;
+
+          window.clearTimeout(playback.startTimer);
+          playback.utterance = null;
+
+          if (index === segments.length - 1) {
+            stopAudio(label + " finished. / 播放完畢。");
+            return;
+          }
+
+          const delay = segment.lastChunk ? gap : 60;
+
+          playback.timer = window.setTimeout(
+            () => speakSegment(index + 1),
+            delay
+          );
+        };
+
+        utterance.onerror = event => {
+          if (token !== playback.token) return;
+
+          if (event.error === "canceled" || event.error === "interrupted") {
+            fail("Audio stopped. / 播放已停止。");
+          } else {
+            fail(
+              "Audio could not be played. Try another English voice or Reload voices. " +
+              "/ 請重新選擇英語聲音或重新載入。"
+            );
+          }
+        };
+
+        playback.startTimer = window.setTimeout(() => {
+          fail(
+            "Audio did not start. Press Test voice or Reload voices, then try again. " +
+            "/ 音訊未能開始，請測試或重新載入聲音。"
+          );
+        }, 15000);
+
+        try {
+          if (synth.paused) synth.resume();
+          synth.speak(utterance);
+        } catch {
+          fail("Audio could not be played. Please reload the voices.");
+        }
+      }
+
+      // The first speech request is made directly from the user's click.
+      speakSegment(0);
+    }
+
+    function playRows(rows, button, label, title = "") {
+      const entries = rows.map(row => ({
+        text: row.item.text,
+        card: row.card
+      }));
+
+      if (title) entries.unshift({ text: title, card: null });
+      playEntries(entries, button, label);
+    }
+
+    /*
+     * ==========================================================
+     * MARKING, ANSWER REVEAL, RESET AND RESHUFFLE
+     * ==========================================================
+     */
+
+    const FEEDBACK = {
+      correct: "✓ Correct!",
+      wrong: "✗ Listen again and check your answer.",
+      empty: "○ Please type an answer.",
+      almost: "△ Words match. Check capitals and punctuation."
+    };
+
+    function clearRowFeedback(row) {
+      row.card.removeAttribute("data-result");
+      row.summary.textContent = "";
+
+      row.fields.forEach(field => {
+        field.state = null;
+        field.input.removeAttribute("data-state");
+        field.input.removeAttribute("aria-invalid");
+        field.feedback.textContent = "";
+        field.feedback.removeAttribute("data-state");
+      });
+    }
+
+    function checkRow(row) {
+      row.fields.forEach(field => {
+        field.state = evaluateField(field);
+        field.input.dataset.state = field.state;
+        field.feedback.dataset.state = field.state;
+        field.feedback.textContent = FEEDBACK[field.state];
+
+        if (field.state === "correct") {
+          field.input.removeAttribute("aria-invalid");
+        } else {
+          field.input.setAttribute("aria-invalid", "true");
+        }
+      });
+
+      const states = row.fields.map(field => field.state);
+      const correct = states.filter(state => state === "correct").length;
+
+      const overall =
+        correct === states.length ? "correct" :
+        states.includes("wrong") ? "wrong" :
+        states.includes("almost") ? "almost" : "empty";
+
+      row.card.dataset.result = overall;
+
+      row.summary.textContent =
+        `${correct}/${states.length} correct` +
+        (correct === states.length ? " — well done!" : " — keep practising.");
+
+      return row.summary.textContent;
+    }
+
+    function updateSummary(model) {
+      const rows = allRows(model);
+      const fields = rows.flatMap(row => row.fields);
+      const correct = fields.filter(field => field.state === "correct").length;
+      const checked = fields.filter(field => field.state !== null).length;
+      const almost = fields.filter(field => field.state === "almost").length;
+      const viewed = rows.filter(row => row.seen).length;
+
+      model.score.textContent =
+        `Correct: ${correct}/${fields.length}` +
+        ` · Checked: ${checked}/${fields.length}` +
+        (almost ? ` · Almost: ${almost}` : "") +
+        ` · Answers viewed: ${viewed} question(s)`;
+
+      model.score.classList.toggle(
+        "complete",
+        fields.length > 0 && correct === fields.length
+      );
+
+      model.progress.max = fields.length;
+      model.progress.value = correct;
+
+      const allVisible = rows.length > 0 &&
+        rows.every(row => !row.reference.hidden);
+
+      model.revealButton.textContent = allVisible
+        ? "🙈 Hide all answers"
+        : "👀 Show all answers";
+
+      model.revealButton.setAttribute(
+        "aria-expanded",
+        String(allVisible)
+      );
+    }
+
+    function setReference(row, visible) {
+      row.reference.hidden = !visible;
+
+      if (visible) row.seen = true;
+
+      row.revealButton.textContent = visible
+        ? "Hide answer"
+        : "👁 Show answer";
+
+      row.revealButton.setAttribute("aria-expanded", String(visible));
+    }
+
+    function checkAll(model) {
+      allRows(model).forEach(checkRow);
+      updateSummary(model);
+      announce(model.name + ". " + model.score.textContent);
+    }
+
+    function toggleAllAnswers(model) {
+      const rows = allRows(model);
+      const show = !rows.every(row => !row.reference.hidden);
+
+      rows.forEach(row => setReference(row, show));
+      updateSummary(model);
+
+      announce(
+        model.name + (show
+          ? ": reference answers shown. Your typing has not been changed."
+          : ": reference answers hidden.")
+      );
+    }
+
+    function renumber(model) {
+      model.groups.forEach(group => {
+        group.rows.forEach((row, index) => {
+          const groupName = group.title || model.name;
+
+          row.questionLabel = groupName + ", question " + (index + 1);
+          row.number.textContent = "Q" + (index + 1);
+
+          row.listenButton.setAttribute(
+            "aria-label",
+            row.questionLabel +
+            (row.item.kind === "verb"
+              ? ": listen to the base form"
+              : ": listen")
+          );
+
+          row.fields.forEach(field => {
+            field.input.setAttribute(
+              "aria-label",
+              row.questionLabel + ": " + field.label
+            );
+          });
+        });
+      });
+    }
+
+    function reshuffleModel(model) {
+      stopAudio();
+
+      model.groups.forEach(group => {
+        if (!group.random) return;
+
+        group.rows = shuffled(group.rows, true);
+        group.grid.replaceChildren(...group.rows.map(row => row.card));
+      });
+
+      renumber(model);
+      updateSummary(model);
+
+      announce(
+        model.name + " reshuffled. Your answers are kept. / 已重新排序並保留作答。"
+      );
+    }
+
+    function resetModel(model) {
+      const rows = allRows(model);
+
+      const hasWork = rows.some(row =>
+        row.seen ||
+        row.fields.some(field =>
+          field.input.value !== "" || field.state !== null
+        )
+      );
+
+      if (
+        hasWork &&
+        !window.confirm(
+          "Clear this part's answers, feedback and answer-view history?\n" +
+          "清除本部分作答、核對結果及答案查看紀錄？題目次序會保留。"
+        )
+      ) {
+        return;
+      }
+
+      stopAudio();
+
+      rows.forEach(row => {
+        row.fields.forEach(field => { field.input.value = ""; });
+        clearRowFeedback(row);
+        setReference(row, false);
+        row.seen = false;
+      });
+
+      updateSummary(model);
+      announce(model.name + " reset. / 本部分已重設。");
+    }
+
+    /*
+     * ==========================================================
+     * BUILD EXERCISE CARDS
+     * ==========================================================
+     */
+
+    function makeRow(model, group, item) {
+      const prefix = model.id + "-" + item.id;
+
+      const row = {
+        item,
+        fields: [],
+        seen: false,
+        card: element("article", "card"),
+        number: element("span", "question-number"),
+        reference: element("div", "reference"),
+        summary: element("p", "row-summary"),
+        questionLabel: ""
+      };
+
+      row.number.id = prefix + "-number";
+      row.card.setAttribute("aria-labelledby", row.number.id);
+
+      const top = element("div", "card-top");
+      const meta = element("div", "card-meta");
+      meta.append(row.number);
+
+      if (item.icon) {
+        const picture = element("span", "picture", item.icon);
+        picture.setAttribute("role", "img");
+        picture.setAttribute("aria-label", item.clue || "圖像提示");
+        picture.lang = "zh-Hant";
+        meta.append(picture);
+      }
+
+      if (item.role) {
+        meta.append(element("span", "speaker-label", item.role));
+      }
+
+      row.listenButton = makeButton(
+        item.kind === "verb" ? "🔊 Base form" : "🔊 Listen",
+        button => playEntries(
+          [{ text: item.text, card: row.card }],
+          button,
+          row.questionLabel
+        ),
+        "audio-button",
+        true
+      );
+
+      top.append(meta, row.listenButton);
+      row.card.append(top);
+
+      const fields = element(
+        "div",
+        item.kind === "verb" ? "fields verb-fields" : "fields"
+      );
+
+      const definitions = item.kind === "verb"
+        ? item.forms.map((expected, index) => ({
+            expected,
+            label: VERB_COLUMNS[index].label,
+            hint: VERB_COLUMNS[index].hint,
+            kind: "form"
+          }))
+        : [{
+            expected: item.text,
+            label: item.kind === "sentence" ? "Your sentence" : "Your answer",
+            hint: "",
+            kind: item.kind
+          }];
+
+      definitions.forEach((definition, index) => {
+        const wrapper = element("div", "field");
+        const label = element(
+          "label",
+          item.kind === "verb" ? "" : "sr-only",
+          definition.label
+        );
+
+        if (definition.hint) {
+          label.append(element("small", "", definition.hint));
+        }
+
+        wrapper.append(label);
+
+        if (definition.expected === null) {
+          const dash = element("div", "worksheet-dash", "---");
+          dash.append(element("small", "", "As printed · 不計分"));
+          wrapper.append(dash);
+          fields.append(wrapper);
+          return;
+        }
+
+        const input = element(
+          item.kind === "sentence" ? "textarea" : "input",
+          "answer-input"
+        );
+
+        if (input.tagName === "INPUT") {
+          input.type = "text";
+        } else {
+          input.rows = 2;
+        }
+
+        input.id = prefix + "-input-" + index;
+        label.htmlFor = input.id;
+        input.lang = "en";
+        input.spellcheck = false;
+        input.autocomplete = "off";
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "none");
+
+        input.placeholder = item.kind === "sentence"
+          ? "Type the sentence you hear…"
+          : item.kind === "verb"
+            ? "Type the form…"
+            : "Type the word or phrase…";
+
+        const feedback = element("p", "field-feedback");
+        feedback.id = prefix + "-feedback-" + index;
+        input.setAttribute("aria-describedby", feedback.id);
+
+        const field = {
+          input,
+          feedback,
+          expected: definition.expected,
+          label: definition.label,
+          kind: definition.kind,
+          state: null
+        };
+
+        row.fields.push(field);
+        wrapper.append(input, feedback);
+        fields.append(wrapper);
+
+        input.addEventListener("input", () => {
+          clearRowFeedback(row);
+          updateSummary(model);
+        });
+
+        input.addEventListener("keydown", event => {
+          if (event.isComposing || event.key !== "Enter") return;
+
+          if (
+            input.tagName === "TEXTAREA" &&
+            !event.ctrlKey &&
+            !event.metaKey
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+
+          const fieldIndex = row.fields.indexOf(field);
+
+          if (
+            item.kind === "verb" &&
+            fieldIndex < row.fields.length - 1
+          ) {
+            row.fields[fieldIndex + 1].input.focus();
+          } else {
+            const result = checkRow(row);
+            updateSummary(model);
+            announce(row.questionLabel + ": " + result);
+          }
+        });
+      });
+
+      row.card.append(fields);
+
+      const actions = element("div", "row-actions");
+
+      const checkButton = makeButton(
+        "✓ Check",
+        () => {
+          const result = checkRow(row);
+          updateSummary(model);
+          announce(row.questionLabel + ": " + result);
+        },
+        "secondary"
+      );
+
+      row.reference.id = prefix + "-reference";
+      row.reference.hidden = true;
+
+      row.revealButton = makeButton(
+        "👁 Show answer",
+        () => {
+          setReference(row, row.reference.hidden);
+          updateSummary(model);
+        }
+      );
+
+      row.revealButton.setAttribute("aria-expanded", "false");
+      row.revealButton.setAttribute("aria-controls", row.reference.id);
+
+      actions.append(checkButton, row.revealButton);
+
+      // Single-answer cards already have their field feedback.
+      row.summary.hidden = item.kind !== "verb";
+
+      row.card.append(actions, row.summary);
+
+      row.reference.append(
+        element("strong", "", "Reference answer / 參考答案")
+      );
+
+      const referenceText = item.kind === "verb"
+        ? item.forms.map((form, index) =>
+            VERB_COLUMNS[index].label + ": " +
+            (form === null ? "--- (not graded / 不計分)" : form)
+          ).join("\n")
+        : item.text;
+
+      const referenceParagraph = element("p", "", referenceText);
+      referenceParagraph.lang = "en";
+      row.reference.append(referenceParagraph);
+
+      const reviewText = item.kind === "verb"
+        ? item.forms
+            .filter(form => form !== null)
+            .map(form => form.replace(/\//g, ", "))
+            .join(". ") + "."
+        : item.text;
+
+      row.reference.append(
+        makeButton(
+          "🔊 Read answer",
+          button => playEntries(
+            [{ text: reviewText, card: row.card }],
+            button,
+            row.questionLabel + " — answer"
+          ),
+          "audio-button",
+          true
+        )
+      );
+
+      row.card.append(row.reference);
+      return row;
+    }
+
+    function makeExercise(specification) {
+      const host = $(specification.id);
+
+      const model = {
+        ...specification,
+        groups: [],
+        score: element("div", "score"),
+        progress: element("progress")
+      };
+
+      const toolbar = element("div", "toolbar");
+
+      if (specification.groups.some(group => group.random)) {
+        toolbar.append(
+          makeButton(
+            specification.shuffleLabel || "🔀 Reshuffle",
+            () => reshuffleModel(model)
+          )
+        );
+      }
+
+      toolbar.append(
+        makeButton(
+          specification.playLabel,
+          button => playRows(
+            allRows(model),
+            button,
+            model.name,
+            specification.spokenTitle || ""
+          ),
+          "audio-button",
+          true
+        ),
+        makeButton("✅ Check all", () => checkAll(model), "primary")
+      );
+
+      model.revealButton = makeButton(
+        "👀 Show all answers",
+        () => toggleAllAnswers(model),
+        "secondary"
+      );
+
+      toolbar.append(
+        model.revealButton,
+        makeButton("♻ Reset", () => resetModel(model))
+      );
+
+      model.score.setAttribute("role", "status");
+      model.score.setAttribute("aria-live", "polite");
+      model.score.setAttribute("aria-atomic", "true");
+
+      model.progress.setAttribute(
+        "aria-label",
+        model.name + ": number of correct answers"
+      );
+
+      model.progress.value = 0;
+      host.append(toolbar, model.score, model.progress);
+
+      specification.groups.forEach(groupSpec => {
+        const group = {
+          ...groupSpec,
+          rows: [],
+          grid: element("div", groupSpec.layout)
+        };
+
+        if (groupSpec.title) {
+          const heading = element("div", "group-heading");
+          const title = element("h3", "", groupSpec.title);
+          title.id = model.id + "-" + groupSpec.key + "-title";
+
+          group.grid.setAttribute("aria-labelledby", title.id);
+
+          heading.append(
+            title,
+            makeButton(
+              groupSpec.playLabel || "▶ Play this group",
+              button => playRows(
+                group.rows,
+                button,
+                groupSpec.title
+              ),
+              "audio-button",
+              true
+            )
+          );
+
+          host.append(heading);
+        }
+
+        const orderedItems = groupSpec.random
+          ? shuffled(groupSpec.items)
+          : [...groupSpec.items];
+
+        group.rows = orderedItems.map(item =>
+          makeRow(model, group, item)
+        );
+
+        group.grid.append(...group.rows.map(row => row.card));
+        model.groups.push(group);
+        host.append(group.grid);
+      });
+
+      renumber(model);
+      updateSummary(model);
+
+      return model;
+    }
+
+    /*
+     * ==========================================================
+     * INITIALISE THE THREE PARTS
+     * ==========================================================
+     */
+
+    const models = [
+      {
+        id: "practice1",
+        name: "Part 1",
+        playLabel: "▶ Play all base forms",
+        groups: [
+          {
+            key: "verbs",
+            layout: "verb-grid",
+            random: true,
+            items: VERB_DATA
+          }
+        ]
+      },
+      {
+        id: "practice2",
+        name: "Part 2",
+        playLabel: "▶ Play whole passage",
+        spokenTitle: "An interview with Farmer Lam",
+        groups: [
+          {
+            key: "farm",
+            layout: "line-grid",
+            random: false,
+            items: FARM_DATA
+          }
+        ]
+      },
+      {
+        id: "practice3",
+        name: "Part 3",
+        playLabel: "▶ Play all",
+        shuffleLabel: "🔀 Reshuffle phrases",
+        spokenTitle: "What do we do when we are happy?",
+        groups: [
+          {
+            key: "phrases",
+            title: "A. Verbs and verb phrases — 17 items",
+            playLabel: "▶ Play phrases",
+            layout: "phrase-grid",
+            random: true,
+            items: PHRASE_DATA
+          },
+          {
+            key: "example",
+            title: "B. Example — 5 sentences",
+            playLabel: "▶ Play example",
+            layout: "line-grid",
+            random: false,
+            items: EXAMPLE_DATA
+          }
+        ]
+      }
+    ].map(makeExercise);
+
+    /*
+     * ==========================================================
+     * GLOBAL CONTROL EVENTS
+     * ==========================================================
+     */
+
+    $("testVoice").addEventListener("click", () => {
+      playEntries(
+        [{
+          text: "Hello. Let's practise English dictation.",
+          card: null
+        }],
+        $("testVoice"),
+        "Voice test"
+      );
+    });
+
+    $("stopAudio").addEventListener("click", () => {
+      stopAudio("Audio stopped. / 播放已停止。");
+    });
+
+    $("reloadVoices").addEventListener("click", () => {
+      stopAudio();
+      refreshVoices();
+      announce("Voice list refreshed. Try Test voice. / 請按 Test voice 測試。");
+
+      window.setTimeout(refreshVoices, 350);
+      window.setTimeout(refreshVoices, 1200);
+    });
+
+    $("voice").addEventListener("change", () => {
+      userSelectedVoice = true;
+      stopAudio("Voice changed. Press Listen to play again. / 聲音已更改。");
+    });
+
+    $("speed").addEventListener("change", () => {
+      stopAudio(
+        "Speed changed to " + Number($("speed").value).toFixed(1) +
+        "×. Press Listen to play again. / 語速已更改。"
+      );
+    });
+
+    $("gap").addEventListener("change", () => {
+      stopAudio(
+        "Gap changed. Press a play button to start again. / 題目間停頓已更改。"
+      );
+    });
+
+    $("strict").addEventListener("change", () => {
+      models.forEach(model => {
+        allRows(model).forEach(row => {
+          const alreadyChecked = row.fields.some(
+            field => field.state !== null
+          );
+
+          if (row.item.kind === "sentence" && alreadyChecked) {
+            checkRow(row);
+          }
+        });
+
+        updateSummary(model);
+      });
+
+      announce(
+        $("strict").checked
+          ? "Strict sentence checking is on. Previously checked sentences have been rechecked."
+          : "Spelling mode is on. Previously checked sentences have been rechecked."
+      );
+    });
+
+    refreshVoices();
+
+    if (hasSpeech) {
+      synth.addEventListener("voiceschanged", refreshVoices);
+      window.setTimeout(refreshVoices, 300);
+      window.setTimeout(refreshVoices, 1100);
+    } else {
+      document.querySelectorAll("[data-audio]").forEach(button => {
+        button.disabled = true;
+      });
+
+      announce(
+        "Audio is unavailable in this browser. Typing and checking still work."
+      );
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && playback.button) {
+        stopAudio("Audio stopped while the page was hidden.");
+      }
+    });
+
+    window.addEventListener("pagehide", () => stopAudio());
+  </script>
+</body>
+</html>
